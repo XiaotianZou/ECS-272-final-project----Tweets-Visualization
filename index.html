@@ -1,0 +1,45 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title>ECS 272 InfoVis Project</title>
+    </head>
+    <body>
+        <h2>PEARL</h2>
+        <h4>by Xiaotian Zou, Shuotong Wang and Fred Lou</h4>
+        <div>
+            <input type = 'text' id = 'twitterId'/>
+            <input type = 'button' onclick = 'getData()' value = 'Go'/>
+        </div>
+        <div>
+            <input type = 'checkbox' id = 'ECheckbox' onclick = '' disabled/><label for = 'ECheckbox'>E</label>
+            <input type = 'checkbox' id = 'OCheckbox' onclick = '' disabled/><label for = 'OCheckbox'>O</label>
+            <input type = 'checkbox' id = 'RCheckbox' onclick = '' disabled/><label for = 'RCheckbox'>R</label>
+            <input type = 'checkbox' id = 'ShuffleCheckbox' onclick = '' disabled/><label for = 'ShuffleCheckBox'>Shuffle</label>
+        </div>
+        <div>
+            <input type = 'checkbox' id = 'angerCheckbox' onclick = ''/><label for = 'angerCheckbox'>anger</label>
+            <input type = 'checkbox' id = 'anticipationCheckbox' onclick = ''/><label for = 'anticipationCheckbox'>anticipation</label>
+            <input type = 'checkbox' id = 'disgustCheckbox' onclick = ''/><label for = 'disgustCheckbox'>disgust</label>
+            <input type = 'checkbox' id = 'fearCheckbox' onclick = ''/><label for = 'fearCheckbox'>fear</label>
+            <input type = 'checkbox' id = 'joyCheckbox' onclick = ''/><label for = 'joyCheckbox'>joy</label>
+            <input type = 'checkbox' id = 'sadnessCheckbox' onclick = ''/><label for = 'sadnessCheckbox'>sadness</label>
+            <input type = 'checkbox' id = 'surpriseCheckbox' onclick = ''/><label for = 'surpriseCheckbox'>surprise</label>
+            <input type = 'checkbox' id = 'trustCheckbox' onclick = ''/><label for = 'trustCheckbox'>trust</label>
+        </div>
+        <div id = 'tweetOverview'>
+            <svg id = 'tweetOverviewSVG'/>
+        </div>
+        <div id = 'bandGraph'>
+            <svg id = 'bandGraphSVG'/>
+        </div>
+        <div id = 'scatterPlot'>
+            <svg id = 'scatterPlotSVG'/>
+        </div>
+        <div id = 'rawTweets'>
+
+        </div>
+        <script src="https://d3js.org/d3.v5.min.js"></script>
+        <script src = './scripts/main.js'></script>
+        <script src = './scripts/bandGraph.js'></script>
+    </body>
+</html>

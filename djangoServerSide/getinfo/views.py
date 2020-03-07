@@ -15,6 +15,8 @@ from nltk.corpus import stopwords
 import numpy as np
 import csv
 
+nltk.download('stopwords')
+nltk.download('punkt')
 
 ssl._create_default_https_context = ssl._create_unverified_context
 stops = set(stopwords.words("english"))
