@@ -100,6 +100,18 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATICFILES_DIRS = (
+    ('images', os.path.join(STATIC_ROOT, 'images').replace('\\', '/')),
+    ('js', os.path.join(STATIC_ROOT, 'js').replace('\\', '/')),
+    ('css', os.path.join(STATIC_ROOT, 'css').replace('\\', '/')),
+    ('fonts', os.path.join(STATIC_ROOT, 'fonts').replace('\\', '/')),
+    ('csv', os.path.join(STATIC_ROOT, 'csv').replace('\\', '/')),
+    ('txt', os.path.join(STATIC_ROOT, 'txt').replace('\\', '/')),
+)
+
+
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
 

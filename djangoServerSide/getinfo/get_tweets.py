@@ -1,8 +1,3 @@
-from django.shortcuts import render
-
-# Create your views here.
-from django.http import HttpResponse
-
 import json
 import tweepy
 import GetOldTweets3 as got
@@ -15,16 +10,15 @@ from nltk.corpus import stopwords
 import numpy as np
 import csv
 
-
 ssl._create_default_https_context = ssl._create_unverified_context
 stops = set(stopwords.words("english"))
-anew = "static/EnglishShortened.csv"
+anew = "./EnglishShortened.csv"
 emo_dict = {'anger': 0, 'anticipation': 1, 'disgust': 2, 'fear': 3, 'joy': 4, 'sadness': 5, 'surprise': 6, 'trust': 7}
 
 # GetOldTweets3
 def init_word_emotion_list():
     word_dict = {}
-    f = open('static/NRC_emotion_lexicon_list.txt')
+    f = open('./NRC_emotion_lexicon_list.txt')
     lines = f.readlines()
     for line in lines:
         if line.find('1') != -1:
@@ -129,20 +123,23 @@ def process_tweets(tweet, word_dict, vad_dict):
     # v_list = np.array(v_list, dtype='float32')
     # a_list = np.array(a_list, dtype='float32')
     # d_list = np.array(d_list, dtype='float32')
-    return {'time': [str(time)],
-            'words': [tweet['text']],
+    return {'time': time,
+            'words': words,
             'p_value': p_arr,
             'valence': get_mean(v_list),
             'arousal': get_mean(a_list),
             'dominance': get_mean(d_list)}
 
 
-
-def index(req):
+def do_testing():
     tweets = get_tweets_got("realDonaldTrump", since='2020-03-04', until='2020-03-05', count=200)[:20]
     word_dict = init_word_emotion_list()
     vad_dict = init_vad()
-    result = {'data': []}
-    for i in range(1, 51):
-        result['data'].append(process_tweets(tweets[1], word_dict, vad_dict))
-    return HttpResponse(json.dumps(result), content_type="application/json")
+    print(process_tweets(tweets[1], word_dict, vad_dict))
+    # for t in tweets:
+    #     print(process_tweets(t))
+
+
+# for testing
+# print(get_tweets_got("realDonaldTrump", since='2020-02-02', until='2020-03-02', count=200))
+do_testing()
