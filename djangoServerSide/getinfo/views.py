@@ -146,5 +146,11 @@ def index(req):
     vad_dict = init_vad()
     result = {'data': []}
     for i in range(1, 51):
-        result['data'].append(process_tweets(tweets[1], word_dict, vad_dict))
-    return HttpResponse(json.dumps(result), content_type="application/json")
+        result['data'].append(process_tweets(tweets[i], word_dict, vad_dict))
+    res = HttpResponse(json.dumps(result), content_type="application/json")
+    res["Access-Control-Allow-Origin"] = "*"
+    res["Access-Control-Allow-Methods"] = "POST, GET, OPTIONS"
+    res["Access-Control-Max-Age"] = "1000"
+    res["Access-Control-Allow-Headers"] = "*"
+    print(res._headers)
+    return res
