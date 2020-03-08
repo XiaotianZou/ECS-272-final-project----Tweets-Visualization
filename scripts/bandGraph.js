@@ -7,6 +7,8 @@ var bandGraphSVG = null
 
 var xScaleBandGraph, countScaleBandGraph, valanceScaleBandGraph
 
+var selectedClusterIndex = -1
+
 function initBandGraph() {
     bandGraphInnerHeight = bandGraphHeight - bandGraphMargin.top - bandGraphMargin.bottom
     bandGraphInnerWidth = bandGraphWidth - bandGraphMargin.left - bandGraphMargin.right
@@ -38,6 +40,10 @@ function onChangeBandGraph() {
     tweetCountByDate.sort(function(a, b) {
         return (Date.parse(a['key']) > Date.parse(b['key']))?1:-1
     })
+    var t = new Date(tweetCountByDate[tweetCountByDate.length - 1].key)
+    t.setDate(t.getDate() + 1)
+    tweetCountByDate.push({key:t, value:0})
+    
     // console.log(tweetCountByDate)
     xScaleBandGraph.domain(d3.extent(tweetCountByDate, function(d) {return Date.parse(d['key'])}))
     countScaleBandGraph.domain([0, 2 * d3.max(tweetCountByDate, function(d) {return d['value']})])
@@ -54,14 +60,54 @@ function onChangeBandGraph() {
         .x(function(d) {return xScaleBandGraph(Date.parse(d.data['key']))})
         .y0(function(d) {return countScaleBandGraph(d[0])})
         .y1(function(d) {return countScaleBandGraph(d[1])})
+    
+    var mouseLeaveHandlerStream = function() {
+        selectedCluster = null
+    }
+
+    var mouseMoveHandlerStream = function() {
+        var mouseX = d3.mouse(this)[0]
+        var invertedX = xScaleBandGraph.invert(mouseX)
+        var j
+        for(j = data.length - 1; j >= 0; j--) {
+            if(data[j].earlyTime <= invertedX) break
+        }
+        if(selectedClusterIndex != j) {
+            selectedClusterIndex = j
+            bandGraphSVG.selectAll('.streamSelection').remove()
+            if(j == -1) return
+            bandGraphSVG.append('clipPath')
+                .attr('id', 'streamSelectionClipPath')
+                .attr('class', 'streamSelection')
+                .append('rect')
+                .attr('id', 'streamSelectionRect')
+                .attr('y', 0)
+                .attr('height', bandGraphInnerHeight)
+                .attr('width', (j == data.length -  1) ? (bandGraphInnerWidth - xScaleBandGraph(data[j]['earlyTime'])) : (xScaleBandGraph(data[j + 1]['earlyTime']) - xScaleBandGraph(data[j]['earlyTime'])))
+                .attr('x' , xScaleBandGraph(data[j]['earlyTime']))
+                
+            bandGraphSVG.selectAll('#streamSelection')
+                .data(layers)
+                .enter()
+                .append('path')
+                .attr('class', 'streamSelection')
+                .attr('id', 'streamSelectionStream')
+                .style('fill', '#6293BA')
+                .attr('d', area)
+                .style('-webkit-clip-path', 'url(#streamSelectionClipPath)')
+                .style('clip-path', 'url(#streamSelectionClipPath)')
+        }
+    }
 
     bandGraphSVG.selectAll('path').remove()
     bandGraphSVG.selectAll('path')
         .data(layers)
         .enter()
         .append('path')
-        .style('fill', '#B5CCE1')// R 181 G 204 B 225
+        .style('fill', '#B5CCE1')
         .attr('d', area)
+        .on('mousemove', mouseMoveHandlerStream)
+        .on('mouseleave', mouseLeaveHandlerStream)
     
     bandGraphSVG.append('g')
         .call(xAxisBandGraph)
