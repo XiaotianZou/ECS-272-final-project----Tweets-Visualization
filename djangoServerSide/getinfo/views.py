@@ -15,6 +15,7 @@ from nltk.corpus import stopwords
 import numpy as np
 import csv
 
+
 nltk.download('stopwords')
 nltk.download('punkt')
 
@@ -101,6 +102,8 @@ def process_tweets(tweet, word_dict, vad_dict):
     v_list = [[0], [0], [0], [0], [0], [0], [0], [0]]
     a_list = [[0], [0], [0], [0], [0], [0], [0], [0]]
     d_list = [[0], [0], [0], [0], [0], [0], [0], [0]]
+    tmp_trigger_words = []
+    trigger_words_list = []
     for i in range(len(words)):
         if words[i] in stops or not words[i].isalpha():
             continue
@@ -116,6 +119,8 @@ def process_tweets(tweet, word_dict, vad_dict):
         for index in range(len(p_arr)):
             p_arr[index] += tmp_p_val[index]
             if words[i] in vad_dict.keys() and tmp_p_val[index] > 0:
+                if index == 0:
+                    tmp_trigger_words.append(words[i])
                 v = vad_dict[words[i]][0]
                 a = vad_dict[words[i]][1]
                 d = vad_dict[words[i]][2]
@@ -127,7 +132,7 @@ def process_tweets(tweet, word_dict, vad_dict):
                 v_list[index].append(v)
                 a_list[index].append(a)
                 d_list[index].append(d)
-        
+    trigger_words_list.append(tmp_trigger_words)
     # v_list = np.array(v_list, dtype='float32')
     # a_list = np.array(a_list, dtype='float32')
     # d_list = np.array(d_list, dtype='float32')
@@ -136,7 +141,8 @@ def process_tweets(tweet, word_dict, vad_dict):
             'p_value': p_arr,
             'valence': get_mean(v_list),
             'arousal': get_mean(a_list),
-            'dominance': get_mean(d_list)}
+            'dominance': get_mean(d_list),
+            'tigger': trigger_words_list}
 
 
 
