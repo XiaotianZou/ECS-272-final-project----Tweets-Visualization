@@ -119,11 +119,11 @@ def process_tweets(tweet, word_dict, vad_dict):
         for index in range(len(p_arr)):
             p_arr[index] += tmp_p_val[index]
             if words[i] in vad_dict.keys() and tmp_p_val[index] > 0:
-                if index == 0:
-                    tmp_trigger_words.append(words[i])
                 v = vad_dict[words[i]][0]
                 a = vad_dict[words[i]][1]
                 d = vad_dict[words[i]][2]
+                if index == 0:
+                    tmp_trigger_words.append([words[i], v, a, d])
                 if neg:
                     v = 5 - (v - 5)
                     a = 5 - (a - 5)
@@ -138,7 +138,7 @@ def process_tweets(tweet, word_dict, vad_dict):
     # d_list = np.array(d_list, dtype='float32')
     return {'time': [str(time)],
             'words': [tweet['text']],
-            'p_value': p_arr,
+            'category': p_arr,
             'valence': get_mean(v_list),
             'arousal': get_mean(a_list),
             'dominance': get_mean(d_list),
