@@ -142,7 +142,7 @@ def process_tweets(tweet, word_dict, vad_dict):
             'valence': get_mean(v_list),
             'arousal': get_mean(a_list),
             'dominance': get_mean(d_list),
-            'tigger': trigger_words_list}
+            'trigger': trigger_words_list}
 
 
 
