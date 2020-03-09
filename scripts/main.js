@@ -40,4 +40,5 @@ function getData() {
 function init() {
     initBandGraph()
     initTagCloud()
+    initRawTweets()
 }
