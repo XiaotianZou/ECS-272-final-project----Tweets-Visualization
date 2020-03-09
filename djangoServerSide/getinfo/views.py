@@ -123,7 +123,7 @@ def process_tweets(tweet, word_dict, vad_dict):
                 a = vad_dict[words[i]][1]
                 d = vad_dict[words[i]][2]
                 if index == 0:
-                    tmp_trigger_words.append([words[i], v, a, d])
+                    tmp_trigger_words.append([words[i], v, a, d, tmp_p_val])
                 if neg:
                     v = 5 - (v - 5)
                     a = 5 - (a - 5)
