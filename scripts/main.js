@@ -41,4 +41,5 @@ function init() {
     initBandGraph()
     initTagCloud()
     initRawTweets()
+    initScatterPlot()
 }
