@@ -89,55 +89,60 @@ def get_mean(arr):
         result.append(tmp_sum / len(arr[index]))
     return result
 
-def process_tweets(tweet, word_dict, vad_dict):
+def process_tweets(tweets, word_dict, vad_dict):
     """
     :param tweet: a single tweet from "get_tweets_got" function
     :return: a tweet-like dict
     """
-    time = tweet['time']
-    text = tweet['text']
-    # tokenize
-    words = word_tokenize(text)
+    time_arr = []
+    words_arr = []
     p_arr = [0, 0, 0, 0, 0, 0, 0, 0]
     v_list = [[0], [0], [0], [0], [0], [0], [0], [0]]
     a_list = [[0], [0], [0], [0], [0], [0], [0], [0]]
     d_list = [[0], [0], [0], [0], [0], [0], [0], [0]]
     tmp_trigger_words = []
     trigger_words_list = []
-    for i in range(len(words)):
-        if words[i] in stops or not words[i].isalpha():
-            continue
-        neg = False
-        # 检查当前word前是否有否定词
-        for index in range(i - 1, i - 3, -1):
-            if index < 0:
-                break
-            if words[index] == 'not' or words[index] == 'no' or words[index] == 'n\'t':
-                neg = True
-                break
-        tmp_p_val = get_p_value(words[i], word_dict)
-        for index in range(len(p_arr)):
-            p_arr[index] += tmp_p_val[index]
-            if words[i] in vad_dict.keys() and tmp_p_val[index] > 0:
-                v = vad_dict[words[i]][0]
-                a = vad_dict[words[i]][1]
-                d = vad_dict[words[i]][2]
-                if index == 0:
-                    tmp_trigger_words.append([words[i], v, a, d, tmp_p_val])
-                if neg:
-                    v = 5 - (v - 5)
-                    a = 5 - (a - 5)
-                    d = 5 - (d - 5)
-                
-                v_list[index].append(v)
-                a_list[index].append(a)
-                d_list[index].append(d)
-    trigger_words_list.append(tmp_trigger_words)
+    for tweet in tweets:
+        time = tweet['time']
+        text = tweet['text']
+        time_arr.append(str(time))
+        words_arr.append(text)
+        # tokenize
+        words = word_tokenize(text)
+        for i in range(len(words)):
+            if words[i] in stops or not words[i].isalpha():
+                continue
+            neg = False
+            # 检查当前word前是否有否定词
+            for index in range(i - 1, i - 3, -1):
+                if index < 0:
+                    break
+                if words[index] == 'not' or words[index] == 'no' or words[index] == 'n\'t':
+                    neg = True
+                    break
+            tmp_p_val = get_p_value(words[i], word_dict)
+            for index in range(len(p_arr)):
+                p_arr[index] += tmp_p_val[index]
+                if words[i] in vad_dict.keys() and tmp_p_val[index] > 0:
+                    v = vad_dict[words[i]][0]
+                    a = vad_dict[words[i]][1]
+                    d = vad_dict[words[i]][2]
+                    if index == 0:
+                        tmp_trigger_words.append([words[i], v, a, d, tmp_p_val])
+                    if neg:
+                        v = 5 - (v - 5)
+                        a = 5 - (a - 5)
+                        d = 5 - (d - 5)
+                    
+                    v_list[index].append(v)
+                    a_list[index].append(a)
+                    d_list[index].append(d)
+        trigger_words_list.append(tmp_trigger_words)
     # v_list = np.array(v_list, dtype='float32')
     # a_list = np.array(a_list, dtype='float32')
     # d_list = np.array(d_list, dtype='float32')
-    return {'time': [str(time)],
-            'words': [tweet['text']],
+    return {'time': time_arr,
+            'words': words_arr,
             'category': p_arr,
             'valence': get_mean(v_list),
             'arousal': get_mean(a_list),
@@ -147,12 +152,16 @@ def process_tweets(tweet, word_dict, vad_dict):
 
 
 def index(req):
-    tweets = get_tweets_got("realDonaldTrump", since='2020-03-01', until='2020-03-05', count=200)[:60]
+    tweets = get_tweets_got("realDonaldTrump", since='2020-03-01', until='2020-03-05', count=200)[:90]
     word_dict = init_word_emotion_list()
     vad_dict = init_vad()
     result = {'data': []}
-    for i in range(1, 51):
-        result['data'].append(process_tweets(tweets[i], word_dict, vad_dict))
+    i = 0
+    while i < 80:
+        result['data'].append(process_tweets(tweets[i: i+4], word_dict, vad_dict))
+        i += 4
+    # for i in range(1, 51):
+    #     result['data'].append(process_tweets(tweets[i], word_dict, vad_dict))
     res = HttpResponse(json.dumps(result), content_type="application/json")
     res["Access-Control-Allow-Origin"] = "*"
     res["Access-Control-Allow-Methods"] = "POST, GET, OPTIONS"
