@@ -10,9 +10,7 @@ var bandGraphSVGLayer2 = null
 var xScaleBandGraph, countScaleBandGraph, valanceScaleBandGraph
 
 var hoveredClusterIndex = -1
-
-// var mouseOnStream = false
-// var mouseOnHoveredStream = false
+var selectedClusterIndex = -1
 
 function initBandGraph() {
     bandGraphInnerHeight = bandGraphHeight - bandGraphMargin.top - bandGraphMargin.bottom
@@ -32,7 +30,6 @@ function initBandGraph() {
 
     hoveredClusterIndex = -1
 }
-
 
 function onChangeBandGraph() {
     bandGraphSVGLayer2.selectAll('*')
@@ -72,11 +69,10 @@ function onChangeBandGraph() {
 
     var mouseLeaveHandlerStream = function () {
         hoveredClusterIndex = -1
-        bandGraphSVGLayer1.selectAll('.streamSelection').remove()
+        bandGraphSVGLayer1.selectAll('.streamHovering').remove()
     }
 
     var mouseMoveHandlerStream = function () {
-        mouseOnStream = true
         var mouseX = d3.mouse(this)[0]
         var invertedX = xScaleBandGraph.invert(mouseX)
         var j
@@ -85,29 +81,67 @@ function onChangeBandGraph() {
         }
         if (hoveredClusterIndex != j) {
             hoveredClusterIndex = j
-            bandGraphSVGLayer1.selectAll('.streamSelection').remove()
+            bandGraphSVGLayer1.selectAll('.streamHovering').remove()
             if (j == -1) return
             onChangeTagCloud()
             bandGraphSVGLayer1.append('clipPath')
-                .attr('id', 'streamSelectionClipPath')
-                .attr('class', 'streamSelection')
+                .attr('id', 'streamHoveringClipPath')
+                .attr('class', 'streamHovering')
                 .append('rect')
-                .attr('id', 'streamSelectionRect')
+                .attr('id', 'streamHoveringRect')
                 .attr('y', 0)
                 .attr('height', bandGraphInnerHeight)
                 .attr('width', (j == data.length - 1) ? (bandGraphInnerWidth - xScaleBandGraph(data[j]['earlyTime'])) : (xScaleBandGraph(data[j + 1]['earlyTime']) - xScaleBandGraph(data[j]['earlyTime'])))
                 .attr('x', xScaleBandGraph(data[j]['earlyTime']))
 
-            bandGraphSVGLayer1.selectAll('#streamSelection')
+            bandGraphSVGLayer1.selectAll('#streamHovering')
                 .data(layers)
                 .enter()
                 .append('path')
-                .attr('class', 'streamSelection')
-                .attr('id', 'streamSelectionStream')
+                .attr('class', 'streamHovering')
+                .attr('id', 'streamHoveringStream')
                 .style('fill', '#6293BA')
                 .attr('d', area)
-                .style('-webkit-clip-path', 'url(#streamSelectionClipPath)')
-                .style('clip-path', 'url(#streamSelectionClipPath)')
+                .style('-webkit-clip-path', 'url(#streamHoveringClipPath)')
+                .style('clip-path', 'url(#streamHoveringClipPath)')
+            bandGraphSVGLayer1.append('line')
+                .attr('class', 'streamHovering')
+                .attr('x1', xScaleBandGraph(data[j]['earlyTime']))
+                .attr('x2', xScaleBandGraph(data[j]['earlyTime']))
+                .attr('y1', 0)
+                .attr('y2', bandGraphInnerHeight)
+                .attr('stroke', 'red')
+                .attr('stroke-width', 1)
+            bandGraphSVGLayer1.append('text')
+                .attr('class', 'streamHovering')
+                .attr('x', xScaleBandGraph(data[j]['earlyTime']))
+                .attr('y', bandGraphInnerHeight - 3)
+                .text(data[j]['earlyTime'].getFullYear() + '.' + (data[j]['earlyTime'].getMonth() + 1) + '.' + data[j]['earlyTime'].getDate())
+                .attr('font-family', 'serif')
+                .attr('font-size', '12px')
+        }
+    }
+
+    var mouseClickHandlerStream = function() {
+        var mouseX = d3.mouse(this)[0]
+        var invertedX = xScaleBandGraph.invert(mouseX)
+        var j
+        for (j = data.length - 1; j >= 0; j--) {
+            if (data[j].earlyTime <= invertedX) break
+        }
+        if(j == -1) return
+        if(j != selectedClusterIndex) {
+            selectedClusterIndex = j
+            bandGraphSVGLayer1.selectAll('.streamSelection').remove()
+            bandGraphSVGLayer1.append('line')
+                .attr('class', 'streamSelection')
+                .attr('x1', xScaleBandGraph(data[j]['earlyTime']))
+                .attr('x2', xScaleBandGraph(data[j]['earlyTime']))
+                .attr('y1', 0)
+                .attr('y2', bandGraphInnerHeight)
+                .attr('stroke', 'red')
+                .attr('stroke-width', 2)
+            onChangeRawTweets()
         }
     }
 
@@ -120,7 +154,7 @@ function onChangeBandGraph() {
         .style('opacity', 0.5)
         .attr('d', area)
         .on('mousemove', mouseMoveHandlerStream)
-        .on('mouseenter', mouseMoveHandlerStream)
+        .on('click', mouseClickHandlerStream)
         .on('mouseleave', mouseLeaveHandlerStream)
 
     bandGraphSVGLayer2.append('g')

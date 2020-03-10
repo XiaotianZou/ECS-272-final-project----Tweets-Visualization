@@ -36,19 +36,19 @@ function onChangeTagCloud() {
     wordCount = d3.entries(wordCount)
     // console.log(wordCount)
     xScaleTagCloud = d3.scaleLinear().range([10, 95])
-        .domain(d3.extent(wordCount, function(d) {return d.value}))
-    
+        .domain(d3.extent(wordCount, function (d) { return d.value }))
+
     var layoutTagCloud = d3.layout.cloud()
         .size([tagCloudInnerWidth, tagCloudInnerHeight])
         .words(wordCount)
-        .fontSize(function(d) {
+        .fontSize(function (d) {
             return xScaleTagCloud(d.value)
         })
         .rotate(0)
         .font('Serif')
         .on('end', drawTagCloud)
         .start()
-    
+
     d3.layout.cloud().stop()
 }
 
@@ -57,26 +57,26 @@ function drawTagCloud(words) {
         .data(words)
         .enter()
         .append('text')
-        .style('font-size', function(d) {
+        .style('font-size', function (d) {
             return xScaleTagCloud(d.value) + 'px'
         })
         .style('font-family', 'Serif')
         .attr('text-anchor', 'middle')
-        .attr('transform', function(d) {
+        .attr('transform', function (d) {
             // console.log('(' + d.x + ', ' + d.y + ')')
-            return 'translate(' + d.x + ', ' + d.y +')'
+            return 'translate(' + d.x + ', ' + d.y + ')'
         })
-        .text(function(d) {
+        .text(function (d) {
             return d.key
         })
 }
 
 // Used to remove invalid words from the tag cloud
 function isValidWordTagCloud(string) {
-    if(string.length < 1) return false
-    if(string.includes('#')) return false
-    if(string.includes('@')) return false
-    if(string.includes('http://')) return false
-    if(string.includes('https://')) return false
+    if (string.length < 1) return false
+    if (string.includes('#')) return false
+    if (string.includes('@')) return false
+    if (string.includes('http://')) return false
+    if (string.includes('https://')) return false
     return true
 }

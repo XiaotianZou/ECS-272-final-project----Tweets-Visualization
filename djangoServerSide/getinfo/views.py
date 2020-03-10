@@ -152,16 +152,17 @@ def process_tweets(tweets, word_dict, vad_dict):
 
 
 def index(req):
-    tweets = get_tweets_got("realDonaldTrump", since='2020-03-01', until='2020-03-05', count=200)[:90]
+    tweets = get_tweets_got("realDonaldTrump", since='2020-02-27', until='2020-03-09', count=200)
     word_dict = init_word_emotion_list()
     vad_dict = init_vad()
     result = {'data': []}
     i = 0
-    while i < 80:
+    while i < 160:
         result['data'].append(process_tweets(tweets[i: i+4], word_dict, vad_dict))
         i += 4
     # for i in range(1, 51):
     #     result['data'].append(process_tweets(tweets[i], word_dict, vad_dict))
+
     res = HttpResponse(json.dumps(result), content_type="application/json")
     res["Access-Control-Allow-Origin"] = "*"
     res["Access-Control-Allow-Methods"] = "POST, GET, OPTIONS"
