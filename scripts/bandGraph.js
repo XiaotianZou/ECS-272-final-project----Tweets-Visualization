@@ -12,6 +12,9 @@ var xScaleBandGraph, countScaleBandGraph, valanceScaleBandGraph
 var hoveredClusterIndex = -1
 var selectedClusterIndex = -1
 
+var tweetCountByDate
+var tweetCountLayers
+
 function initBandGraph() {
     bandGraphInnerHeight = bandGraphHeight - bandGraphMargin.top - bandGraphMargin.bottom
     bandGraphInnerWidth = bandGraphWidth - bandGraphMargin.left - bandGraphMargin.right
@@ -36,7 +39,7 @@ function onChangeBandGraph() {
         .remove()
 
     // console.log(allTweets)
-    var tweetCountByDate = d3.nest().key(function (d) {
+    tweetCountByDate = d3.nest().key(function (d) {
         var time = d['time']
         return time.getFullYear() + '-' + (time.getMonth() + 1) + '-' + time.getDate()
     }).rollup(function (leaves) {
@@ -60,7 +63,7 @@ function onChangeBandGraph() {
         .scale(countScaleBandGraph)
 
     var stack = d3.stack().keys(['value'])
-    var layers = stack(tweetCountByDate)
+    tweetCountLayers = stack(tweetCountByDate)
     // console.log(layers)
     var area = d3.area()
         .x(function (d) { return xScaleBandGraph(Date.parse(d.data['key'])) })
@@ -95,7 +98,7 @@ function onChangeBandGraph() {
                 .attr('x', xScaleBandGraph(data[j]['earlyTime']))
 
             bandGraphSVGLayer1.selectAll('#streamHovering')
-                .data(layers)
+                .data(tweetCountLayers)
                 .enter()
                 .append('path')
                 .attr('class', 'streamHovering')
@@ -148,7 +151,7 @@ function onChangeBandGraph() {
 
     bandGraphSVGLayer2.selectAll('path').remove()
     bandGraphSVGLayer2.selectAll('path')
-        .data(layers)
+        .data(tweetCountLayers)
         .enter()
         .append('path')
         .style('fill', '#6293BA')

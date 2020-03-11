@@ -30,6 +30,7 @@ function getData() {
             })
 
             onChangeBandGraph()
+            onChangeOverview()
         }
     }
     xhttp.open('GET', 'http://127.0.0.1:8000/getinfo', true)
@@ -42,4 +43,5 @@ function init() {
     initTagCloud()
     initRawTweets()
     initScatterPlot()
+    initOverview()
 }
