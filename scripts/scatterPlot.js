@@ -2,6 +2,7 @@ var scatterPlotMargin = {top: 20, left: 20, right: 20, bottom: 20}
 var scatterPlotWidth = 450
 var scatterPlotHeight = 400
 var scatterPlotInnerWidth, scatterPlotInnerHeight
+var emotionColors = ['#EF6664', '#FAA461', '#9887BB', '#31AE6D', '#FFD777', '#679FD3', '#25A6D1', '#A5CC68']
 
 var scatterPlotSVG = null
 
@@ -27,26 +28,27 @@ function initScatterPlot() {
 }
 
 function onChangeScatterPlot() {
-    var triggerWords = []
+    // var triggerWords = []
     // console.log(data[selectedClusterIndex]['trigger'])
-    for(var i = 0; i < data[selectedClusterIndex]['trigger'].length; i++) {
-        for(var j = 0; j < data[selectedClusterIndex]['trigger'][i].length; j++) {
-            triggerWords.push(data[selectedClusterIndex]['trigger'][i][j])
-        }
-    }
+    // for(var i = 0; i < data[selectedClusterIndex]['trigger'].length; i++) {
+    //     for(var j = 0; j < data[selectedClusterIndex]['trigger'][i].length; j++) {
+    //         triggerWords.push(data[selectedClusterIndex]['trigger'][i][j])
+    //     }
+    // }
     // console.log(triggerWords)
-    var temp = {}
-    for(var i = 0; i < triggerWords.length; i++) {
-        temp[triggerWords[i][0]] = triggerWords[i]
-    }
-    triggerWords = []
-    for(var key in temp) {
-        triggerWords.push(temp[key])
-    }
+    // var temp = {}
+    // for(var i = 0; i < triggerWords.length; i++) {
+    //     temp[triggerWords[i][0]] = triggerWords[i]
+    // }
+    // triggerWords = []
+    // for(var key in temp) {
+    //     triggerWords.push(temp[key])
+    // }
     // console.log(temp)
-    console.log(triggerWords)
+    // console.log(triggerWords)
+    scatterPlotSVG.selectAll('*').remove()
     scatterPlotSVG.selectAll('circle')
-        .data(triggerWords)
+        .data(data[selectedClusterIndex]['trigger'])
         .enter()
         .append('circle')
         .attr('cx', function(d) {
