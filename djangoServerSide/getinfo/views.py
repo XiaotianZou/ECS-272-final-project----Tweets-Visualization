@@ -100,9 +100,9 @@ def process_tweets(tweets, word_dict, vad_dict):
     v_list = [[0], [0], [0], [0], [0], [0], [0], [0]]
     a_list = [[0], [0], [0], [0], [0], [0], [0], [0]]
     d_list = [[0], [0], [0], [0], [0], [0], [0], [0]]
-    tmp_trigger_words = []
     trigger_words_list = []
     for tweet in tweets:
+        tmp_trigger_words = []
         time = tweet['time']
         text = tweet['text']
         time_arr.append(str(time))
@@ -137,7 +137,7 @@ def process_tweets(tweets, word_dict, vad_dict):
                     v_list[index].append(v)
                     a_list[index].append(a)
                     d_list[index].append(d)
-        trigger_words_list.append(tmp_trigger_words)
+        trigger_words_list.extend(tmp_trigger_words)
     # v_list = np.array(v_list, dtype='float32')
     # a_list = np.array(a_list, dtype='float32')
     # d_list = np.array(d_list, dtype='float32')
