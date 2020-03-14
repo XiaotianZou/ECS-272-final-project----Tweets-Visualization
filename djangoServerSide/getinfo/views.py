@@ -21,7 +21,8 @@ nltk.download('punkt')
 
 ssl._create_default_https_context = ssl._create_unverified_context
 stops = set(stopwords.words("english"))
-anew = "static/EnglishShortened.csv"
+# anew = "static/EnglishShortened.csv"
+anew = 'static/NRC-VAD-Lexicon.txt'
 emo_dict = {'anger': 0, 'anticipation': 1, 'disgust': 2, 'fear': 3, 'joy': 4, 'sadness': 5, 'surprise': 6, 'trust': 7}
 
 # GetOldTweets3
@@ -41,15 +42,23 @@ def init_word_emotion_list():
 
 def init_vad():
     vad_arr = {}
-    with open(anew) as csvfile:
-        reader = csv.DictReader(csvfile)
-        for row in reader:
-            vad_arr[row['Word']] = []
-            vad_arr[row['Word']].append(float(row['valence']))
-            vad_arr[row['Word']].append(float(row['arousal']))
-            vad_arr[row['Word']].append(float(row['dominance']))
-
+    f = open(anew)
+    lines = f.readlines()
+    for line in lines:
+        components = line.split('	')
+        vad_arr[components[0]] = []
+        for i in range(1, 4):
+            vad_arr[components[0]].append(float(components[i]))
     return vad_arr
+    # with open(anew) as csvfile:
+    #     reader = csv.DictReader(csvfile)
+    #     for row in reader:
+    #         vad_arr[row['Word']] = []
+    #         vad_arr[row['Word']].append(float(row['valence']))
+    #         vad_arr[row['Word']].append(float(row['arousal']))
+    #         vad_arr[row['Word']].append(float(row['dominance']))
+
+    # return vad_arr
 
 
 def get_tweets_got(user_name, since, until, count=100):
