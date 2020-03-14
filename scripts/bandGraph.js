@@ -11,6 +11,7 @@ var xScaleBandGraph, countScaleBandGraph, valanceScaleBandGraph
 
 var hoveredClusterIndex = -1
 var selectedClusterIndex = -1
+var selectedClusterTrigger = null
 
 var tweetCountByDate
 var tweetCountLayers
@@ -144,6 +145,11 @@ function onChangeBandGraph() {
                 .attr('y2', bandGraphInnerHeight)
                 .attr('stroke', 'red')
                 .attr('stroke-width', 2)
+            selectedClusterTrigger = []
+            data[selectedClusterIndex]['trigger'].forEach(function(d) {
+                selectedClusterTrigger.push(d[0])
+            })
+            console.log(selectedClusterTrigger)
             onChangeRawTweets()
             onChangeScatterPlot()
         }

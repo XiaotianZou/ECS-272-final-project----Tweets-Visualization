@@ -1,4 +1,3 @@
-// var rawTweetsCellHeight = 35
 var rawTweetsCellWidth = 450
 
 var rawTweetsTable = null
@@ -33,13 +32,25 @@ function onChangeRawTweets() {
         .enter()
         .append('tr')
         .append('td')
+        .attr('id', function(d, i) {
+            return 'rawTweetsTableTd' + i
+        })
         .attr('width', rawTweetsCellWidth)
         .style('border-bottom', '1px solid blue')
         .style('border-top', '1px solid blue')
         .on('mouseover', mouseOverHandlerRawTweets)
         .on('mouseleave', mouseLeaveHandlerRawTweets)
         .html(function (d, i) {
-            return d + '<br/><i>[' + data[selectedClusterIndex].time[i] + ']</i>'
+            var res = ''
+            var split = d.split(/([ ,.!?]+)/g)
+            for (var j = 0; j < split.length; j++) {
+                if(selectedClusterTrigger.includes(split[j])) {
+                    res = res + '<b>' + split[j] + '</b>'
+                } else {
+                    res = res + split[j]
+                }
+            }
+            return res + '<br/><i>[' + data[selectedClusterIndex].time[i] + ']</i>'
         })
 
 }

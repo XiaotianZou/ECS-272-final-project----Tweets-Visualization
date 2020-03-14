@@ -6,7 +6,7 @@ var emotionColors = ['#EF6664', '#FAA461', '#9887BB', '#31AE6D', '#FFD777', '#67
 
 var scatterPlotSVG
 var scatterPlotSVGDefaultLayer = null
-var scatterPlotSVGPieLayer = null
+var scatterPlotSVGPieLayers = []
 
 var xScaleScatterPlot, yScaleScatterPlot, sizeScaleScatterPlot
 
@@ -20,9 +20,9 @@ function initScatterPlot() {
         .attr('height', scatterPlotHeight)
     scatterPlotSVGDefaultLayer = scatterPlotSVG.append('g')
         .attr('transform', 'translate(' + scatterPlotMargin.left + ', ' + scatterPlotMargin.top + ')')
-    xScaleScatterPlot = d3.scaleLinear().range([0, scatterPlotInnerWidth]).domain([0, 10])
-    yScaleScatterPlot = d3.scaleLinear().range([scatterPlotInnerHeight, 0]).domain([0, 10])
-    sizeScaleScatterPlot = d3.scaleLinear().range([0, 5]).domain([0, 5])
+    xScaleScatterPlot = d3.scaleLinear().range([0, scatterPlotInnerWidth]).domain([0, 1])
+    yScaleScatterPlot = d3.scaleLinear().range([scatterPlotInnerHeight, 0]).domain([0, 1])
+    sizeScaleScatterPlot = d3.scaleLinear().range([1, 10]).domain([0, 1])
     colorScaleScatterPlot = d3.scaleOrdinal().range(emotionColors)
     xAxisScatterPlot = d3.axisBottom()
         .scale(xScaleScatterPlot)
@@ -37,41 +37,69 @@ function onChangeScatterPlot() {
         .attr('height', scatterPlotHeight)
     scatterPlotSVGDefaultLayer = scatterPlotSVG.append('g')
         .attr('transform', 'translate(' + scatterPlotMargin.left + ', ' + scatterPlotMargin.top + ')')
-    // scatterPlotSVG.selectAll('circle')
-    //     .data(data[selectedClusterIndex]['trigger'])
-    //     .enter()
-    //     .append('circle')
-    //     .attr('cx', function(d) {
-    //         return xScaleScatterPlot(d[2])
-    //     })
-    //     .attr('cy', function(d) {
-    //         return yScaleScatterPlot(d[1])
-    //     })
-    //     .attr('r', function(d) {
-    //         return sizeScaleScatterPlot(d[3])
-    //     })
-    // console.log(data[selectedClusterIndex]['trigger'])
     for(var i = 0; i < data[selectedClusterIndex]['trigger'].length; i++) {
         colorScaleScatterPlot.domain(data[selectedClusterIndex]['trigger'][i][4])
-        scatterPlotSVGPieLayer = scatterPlotSVG.append('g')
+        var scatterPlotSVGPieLayer = scatterPlotSVG.append('g')
             .attr('transform', 'translate(' + (scatterPlotMargin.left + xScaleScatterPlot(data[selectedClusterIndex]['trigger'][i][2])) + ', ' + (scatterPlotMargin.top + yScaleScatterPlot(data[selectedClusterIndex]['trigger'][i][1])) + ')')
+            .attr('data-index', i)
         var pie = d3.pie()
-            // .value(data[selectedClusterIndex]['trigger'][i][4])
-            // .sort(null)
-        // console.log(pie(data[selectedClusterIndex]['trigger'][i][4]))
         var arc = d3.arc()
             .innerRadius(0)
             .outerRadius(sizeScaleScatterPlot(data[selectedClusterIndex]['trigger'][i][3]))
+        var mouseOverHandlerScatterPlot = function(d, j){
+            var i = this.parentNode.getAttribute('data-index')
+            scatterPlotSVG.selectAll('path')
+                .style('opacity', 0.6)
+                .attr('stroke', 'transparent')
+            scatterPlotSVGDefaultLayer.selectAll('path')
+                .style('opacity', 1.0)
+                .attr('stroke', 'black')
+            d3.select(this.parentNode)
+                .selectAll('path')
+                .style('opacity', 1.0)
+                .attr('stroke', 'black')
+                .attr('stroke-width', '1px')
+            d3.select(this.parentNode)
+                .append('text')
+                .attr('class', 'scatterPlotText')
+                .attr('x', sizeScaleScatterPlot(data[selectedClusterIndex]['trigger'][i][3]) + 2)
+                .attr('y', 2)
+                .text(data[selectedClusterIndex]['trigger'][i][0])
+                .attr('font-family', 'serif')
+                .attr('font-size', '12px')
+            for(var j = 0; j < data[selectedClusterIndex]['words'].length; j++) {
+                var split = data[selectedClusterIndex]['words'][j].split(/([ ,.!?]+)/g)
+                if(split.includes(selectedClusterTrigger[i])) {
+                    d3.select('#rawTweetsTableTd' + j)
+                        .style('background-color', 'orange')
+                } else {
+                    d3.select('#rawTweetsTableTd' + j)
+                        .style('background-color', 'transparent')
+                }
+            }
+        }
+        var mouseLeaveHandlerScatterPlot = function(d, j){
+            scatterPlotSVG.selectAll('path')
+                .style('opacity', 1.0)
+                .attr('stroke', 'transparent')
+            scatterPlotSVGDefaultLayer.selectAll('path')
+                .style('opacity', 1.0)
+                .attr('stroke', 'black')
+            scatterPlotSVG.selectAll('.scatterPlotText').remove()
+            rawTweetsTable.selectAll('td')
+                .style('background-color', 'transparent')
+        }
         var path = scatterPlotSVGPieLayer.selectAll('path')
             .data(pie(data[selectedClusterIndex]['trigger'][i][4]))
             .enter()
             .append('path')
-            .attr('fill', function (d, i) {
-                return colorScaleScatterPlot(i)
+            .attr('class', 'scatterPlotPie' + i)
+            .attr('fill', function (d, j) {
+                return colorScaleScatterPlot(j)
             })
             .attr('d', arc)
-            // .attr('stroke', 'black')
-            // .attr('stroke-width', '1px')
+            .on('mouseover', mouseOverHandlerScatterPlot)
+            .on('mouseleave', mouseLeaveHandlerScatterPlot)
     }
     scatterPlotSVGDefaultLayer.append('g')
         .call(xAxisScatterPlot)
