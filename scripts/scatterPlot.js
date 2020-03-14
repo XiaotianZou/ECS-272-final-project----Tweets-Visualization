@@ -42,6 +42,7 @@ function onChangeScatterPlot() {
         var scatterPlotSVGPieLayer = scatterPlotSVG.append('g')
             .attr('transform', 'translate(' + (scatterPlotMargin.left + xScaleScatterPlot(data[selectedClusterIndex]['trigger'][i][2])) + ', ' + (scatterPlotMargin.top + yScaleScatterPlot(data[selectedClusterIndex]['trigger'][i][1])) + ')')
             .attr('data-index', i)
+            .attr('id', 'scatterPlotPie' + i)
         var pie = d3.pie()
         var arc = d3.arc()
             .innerRadius(0)
@@ -93,7 +94,6 @@ function onChangeScatterPlot() {
             .data(pie(data[selectedClusterIndex]['trigger'][i][4]))
             .enter()
             .append('path')
-            .attr('class', 'scatterPlotPie' + i)
             .attr('fill', function (d, j) {
                 return colorScaleScatterPlot(j)
             })
