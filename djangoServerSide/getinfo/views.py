@@ -197,7 +197,7 @@ def process_tweets(tweets, word_dict, vad_dict):
 
 
 def index(req):
-    tweets = get_tweets_got("realDonaldTrump", since='2020-02-27', until='2020-03-09', count=200)
+    tweets = get_tweets_got(req.GET['id'], since='2020-01-02', until='2020-03-09', count=500)
     word_dict = init_word_emotion_list()
     vad_dict = init_vad()
     result = {'data': []}
