@@ -3,6 +3,7 @@ var scatterPlotWidth = 450
 var scatterPlotHeight = 400
 var scatterPlotInnerWidth, scatterPlotInnerHeight
 var emotionColors = ['#EF6664', '#FAA461', '#9887BB', '#31AE6D', '#FFD777', '#679FD3', '#25A6D1', '#A5CC68']
+var emotionCategories = ['anger', 'anticipation', 'disgust', 'fear', 'joy', 'sadness', 'surprise', 'trust']
 
 var scatterPlotSVG
 var scatterPlotSVGDefaultLayer = null

@@ -9,6 +9,7 @@ var xScaleOverview, countScaleOverview, valenceScaleOverview
 
 var avgValenceByCluster
 const arrayAverage = arr => arr.reduce((a, b) => a + b, 0) / arr.length
+const arraySum = arr => arr.reduce((a, b) => a + b, 0)
 
 function initOverview() {
     overviewInnerHeight = overviewHeight - overviewMargin.top - overviewMargin.bottom
@@ -36,6 +37,7 @@ function onChangeOverview() {
         .x(function (d) { return xScaleOverview(Date.parse(d.data['key'])) })
         .y0(function (d) { return countScaleOverview(d[0]) })
         .y1(function (d) { return countScaleOverview(d[1]) })
+        .curve(d3.curveMonotoneX)
     overviewSVG.selectAll('.overviewStream')
         .data(tweetCountLayers)
         .enter()
