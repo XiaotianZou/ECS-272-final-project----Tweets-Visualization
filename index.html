@@ -1,53 +1,151 @@
 <!DOCTYPE HTML>
 <html>
-    <head>
-        <title>ECS 272 InfoVis Project</title>
-    </head>
-    <body>
-        <h2>PEARL</h2>
-        <h4>by Xiaotian Zou, Shuotong Wang and Fred Lou</h4>
-        <div>
-            <input type = 'text' id = 'twitterId'/>
-            <input type = 'button' onclick = 'getData()' value = 'Go'/>
-        </div>
-        <div>
-            <input type = 'checkbox' id = 'ECheckbox' onclick = '' disabled/><label for = 'ECheckbox'>E</label>
-            <input type = 'checkbox' id = 'OCheckbox' onclick = '' disabled/><label for = 'OCheckbox'>O</label>
-            <input type = 'checkbox' id = 'RCheckbox' onclick = '' disabled/><label for = 'RCheckbox'>R</label>
-            <input type = 'checkbox' id = 'ShuffleCheckbox' onclick = '' disabled/><label for = 'ShuffleCheckBox'>Shuffle</label>
-        </div>
-        <div>
-            <input type = 'checkbox' id = 'angerCheckbox' onclick = ''/><label for = 'angerCheckbox'>anger</label>
-            <input type = 'checkbox' id = 'anticipationCheckbox' onclick = ''/><label for = 'anticipationCheckbox'>anticipation</label>
-            <input type = 'checkbox' id = 'disgustCheckbox' onclick = ''/><label for = 'disgustCheckbox'>disgust</label>
-            <input type = 'checkbox' id = 'fearCheckbox' onclick = ''/><label for = 'fearCheckbox'>fear</label>
-            <input type = 'checkbox' id = 'joyCheckbox' onclick = ''/><label for = 'joyCheckbox'>joy</label>
-            <input type = 'checkbox' id = 'sadnessCheckbox' onclick = ''/><label for = 'sadnessCheckbox'>sadness</label>
-            <input type = 'checkbox' id = 'surpriseCheckbox' onclick = ''/><label for = 'surpriseCheckbox'>surprise</label>
-            <input type = 'checkbox' id = 'trustCheckbox' onclick = ''/><label for = 'trustCheckbox'>trust</label>
-        </div>
-        <div id = 'overview'>
-            <svg id = 'overviewSVG'/>
-        </div>
-        <div id = 'bandGraph'>
-            <svg id = 'bandGraphSVG'/>
-        </div>
-        <div id = 'scatterPlot'>
-            <svg id = 'scatterPlotSVG'/>
-        </div>
-        <div id = 'rawTweets'>
-            <table id = 'rawTweetsTable'></table>
-        </div>
-        <div id = 'tagCloud'>
-            <svg id = 'tagCloudSVG'>
-        </div>
-        <script src="https://d3js.org/d3.v5.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/gh/holtzy/D3-graph-gallery@master/LIB/d3.layout.cloud.js"></script>
-        <script src = './scripts/main.js'></script>
-        <script src = './scripts/bandGraph.js'></script>
-        <script src = './scripts/tagCloud.js'></script>
-        <script src = './scripts/rawTweets.js'></script>
-        <script src = './scripts/scatterPlot.js'></script>
-        <script src = './scripts/overview.js'></script>
-    </body>
+
+<head>
+    <link rel='stylesheet' type='text/css' href='./css/style.css'>
+    <script src="https://kit.fontawesome.com/fc0a829822.js" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
+        integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap-theme.min.css"
+        integrity="sha384-6pzBo3FDv/PJ8r2KRkGHifhEocL+1X2rVCTTkUfGk7/0pbek5mMa1upzvWbrUbOZ" crossorigin="anonymous">
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"
+        integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd"
+        crossorigin="anonymous"></script>
+    <title>ECS 272 InfoVis Project</title>
+</head>
+
+<body>
+    <h2>PEARL</h2>
+    <h4>by Xiaotian Zou, Shuotong Wang and Fred Lou</h4>
+    <table id='mainTable'>
+        <tr>
+            <td colspan='2' style='background-image: linear-gradient(#DFDFDF,#C5C5C5);'>
+                <table id='controlTable'>
+                    <tr>
+                        <td style='width: 350px'>
+                            <div id='search'>
+                                <input type='text' id='twitterId' placeholder="Search Here..." />
+                                    <button type="button" class="btn btn-light" onclick='getData()' id='searchButton'><i class="fas fa-search"></i></button>
+                            </div>
+                        </td>
+                        <td>
+                            <div id='analysis'>
+                                <button type="button" class="btn btn-light" disabled>E</button>
+                                <button type="button" class="btn btn-light" disabled>O</button>
+                                <button type="button" class="btn btn-light" disabled>R</button>
+                                <button type="button" class="btn btn-light" disabled>
+                                    <i class="fas fa-random"></i>
+                                </button>
+                            </div>
+                        </td>
+                        <td>
+                            <table id='legendTable'>
+                                <tr>
+                                    <td class = 'btn-group-toggle' data-toggle='buttons'>
+                                        <label class="btn btn-danger active" id='angerLabel'>
+                                            <input type='checkbox' id='angerCheckBox' autocomplete="off" checked/>
+                                            <span class='glyphicon glyphicon-ok'></span>
+                                            anger
+                                        </label>
+                                    </td>
+                                    <td class = 'btn-group-toggle' data-toggle='buttons'>
+                                        <label class="btn btn-primary active" id='disgustLabel'>
+                                            <input type='checkbox' id='disgustCheckBox' autocomplete="off" checked/>
+                                            <span class='glyphicon glyphicon-ok'></span>
+                                            disgust
+                                        </label>
+                                    </td>
+                                    <td class = 'btn-group-toggle' data-toggle='buttons'>
+                                        <label class="btn btn-warning active" id='joyLabel'>
+                                            <input type='checkbox' id='joyCheckBox' autocomplete="off" checked/>
+                                            <span class='glyphicon glyphicon-ok'></span>
+                                            joy
+                                        </label>
+                                    </td>
+                                    <td class = 'btn-group-toggle' data-toggle='buttons'>
+                                        <label class="btn btn-info active" id='surpriseLabel'>
+                                            <input type='checkbox' id='surpriseCheckBox' autocomplete="off" checked/>
+                                            <span class='glyphicon glyphicon-ok'></span>
+                                            surprise
+                                        </label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class = 'btn-group-toggle' data-toggle='buttons'>
+                                        <label class="btn btn-warning active" id='anticipationLabel'>
+                                            <input type='checkbox' id='anticipationCheckBox' autocomplete="off" checked/>
+                                            <span class='glyphicon glyphicon-ok'></span>
+                                            anticipation
+                                        </label>
+                                    </td>
+                                    <td class = 'btn-group-toggle' data-toggle='buttons'>
+                                        <label class="btn btn-success active" id='fearLabel'>
+                                            <input type='checkbox' id='fearCheckBox' autocomplete="off" checked/>
+                                            <span class='glyphicon glyphicon-ok'></span>
+                                            fear
+                                        </label>
+                                    </td>
+                                    <td class = 'btn-group-toggle' data-toggle='buttons'>
+                                        <label class="btn btn-primary active" id='sadnessLabel'>
+                                            <input type='checkbox' id='sadnessCheckBox' autocomplete="off" checked/>
+                                            <span class='glyphicon glyphicon-ok'></span>
+                                            sadness
+                                        </label>
+                                    </td>
+                                    <td class = 'btn-group-toggle' data-toggle='buttons'>
+                                        <label class="btn btn-success active" id='trustLabel'>
+                                            <input type='checkbox' id='trustCheckBox' autocomplete="off" checked/>
+                                            <span class='glyphicon glyphicon-ok'></span>
+                                            trust
+                                        </label>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td colspan='2'>
+                <div id='overview'>
+                    <svg id='overviewSVG' />
+                </div>
+                <div id='bandGraph'>
+                    <svg id='bandGraphSVG' />
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div id='scatterPlot'>
+                    <svg id='scatterPlotSVG' />
+                </div>
+            </td>
+            <td>
+                <div id='rawTweets'>
+                    <table id='rawTweetsTable'></table>
+                </div>
+            </td>
+        </tr>
+    </table>
+    <div id='tagCloud'>
+        <svg id='tagCloudSVG'>
+    </div>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/holtzy/D3-graph-gallery@master/LIB/d3.layout.cloud.js"></script>
+    <script src='./scripts/bandGraph.js'></script>
+    <script src='./scripts/tagCloud.js'></script>
+    <script src='./scripts/rawTweets.js'></script>
+    <script src='./scripts/scatterPlot.js'></script>
+    <script src='./scripts/overview.js'></script>
+    <script src='./scripts/main.js'></script>
+    <script src='./scripts/colorLegend.js'></script>
+</body>
+
 </html>
