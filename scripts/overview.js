@@ -50,7 +50,7 @@ function onChangeOverview() {
         o['valence'] = arrayAverage(d['valence'])
         avgValenceByCluster.push(o)
     })
-    console.log(avgValenceByCluster)
+    // console.log(avgValenceByCluster)
     var line = d3.line()
         .x(function(d, i) {return xScaleOverview(Date.parse(d['earlyTime']))})
         .y(function(d) {return valenceScaleOverview(d['valence'])})
@@ -78,4 +78,24 @@ function onChangeOverview() {
     overviewSVG.append('g')
         .call(xAxisOverview)
         .attr('transform', 'translate(0, ' + overviewInnerHeight + ')')
+
+    var brush = d3.brushX()
+        .extent([[0, 0], [overviewInnerWidth, overviewInnerHeight]])
+    var onBrushHandlerOverview = function() {
+        var brushSelectionOverview = d3.brushSelection(this)
+        // console.log(brushSelectionOverview)
+        xScaleBandGraph.domain([xScaleOverview.invert(brushSelectionOverview[0]), xScaleOverview.invert(brushSelectionOverview[1])])
+        drawBandGraph()
+    }
+    var onEndHandlerOverview = function() {
+        var brushSelectionOverview = d3.brushSelection(this)
+        if(brushSelectionOverview == null) {
+            xScaleBandGraph.domain(d3.extent(tweetCountByDate, function (d) { return Date.parse(d['key']) }))
+            drawBandGraph()
+        }
+    }
+    brush.on('brush', onBrushHandlerOverview)
+        .on('end', onEndHandlerOverview)
+    overviewSVG.append('g')
+        .call(brush)
 }
