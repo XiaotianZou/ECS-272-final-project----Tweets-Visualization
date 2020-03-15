@@ -1,5 +1,5 @@
 var overviewMargin = {top: 3, left: 30, right: 30, bottom: 20}
-var overviewWidth = 800
+var overviewWidth = 900
 var overviewHeight = 70
 var overviewInnerHeight, overviewInnerWidth
 

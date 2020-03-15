@@ -1,5 +1,5 @@
-var bandGraphMargin = { top: 10, left: 30, right: 30, bottom: 30 }
-var bandGraphWidth = 800
+var bandGraphMargin = { top: 0, left: 30, right: 30, bottom: 30 }
+var bandGraphWidth = 900
 var bandGraphHeight = 300
 var bandGraphInnerHeight, bandGraphInnerWidth
 
@@ -78,6 +78,8 @@ function drawBandGraph() {
     var mouseLeaveHandlerStream = function () {
         hoveredClusterIndex = -1
         bandGraphSVGLayer1.selectAll('.streamHovering').remove()
+        tagCloudDIV.style('display', 'none')
+        tagCloudSVG.selectAll('text').remove()
     }
 
     var mouseMoveHandlerStream = function () {
@@ -91,7 +93,6 @@ function drawBandGraph() {
             hoveredClusterIndex = j
             bandGraphSVGLayer1.selectAll('.streamHovering').remove()
             if (j == -1) return
-            onChangeTagCloud()
             bandGraphSVGLayer1.append('clipPath')
                 .attr('id', 'streamHoveringClipPath')
                 .attr('class', 'streamHovering')
@@ -127,6 +128,12 @@ function drawBandGraph() {
                 .text(data[j]['earlyTime'].getFullYear() + '.' + (data[j]['earlyTime'].getMonth() + 1) + '.' + data[j]['earlyTime'].getDate())
                 .attr('font-family', 'serif')
                 .attr('font-size', '12px')
+            // Update tag cloud content
+            onChangeTagCloud()
+
+            tagCloudDIV.style('left', (d3.event.pageX + 20) + 'px')
+                .style('top', (d3.event.pageY + 20) + 'px')
+                .style('display', 'block')
         }
     }
 

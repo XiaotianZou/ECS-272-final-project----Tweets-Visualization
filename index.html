@@ -1,53 +1,147 @@
 <!DOCTYPE HTML>
 <html>
-    <head>
-        <title>ECS 272 InfoVis Project</title>
-    </head>
-    <body>
-        <h2>PEARL</h2>
-        <h4>by Xiaotian Zou, Shuotong Wang and Fred Lou</h4>
-        <div>
-            <input type = 'text' id = 'twitterId'/>
-            <input type = 'button' onclick = 'getData()' value = 'Go'/>
-        </div>
-        <div>
-            <input type = 'checkbox' id = 'ECheckbox' onclick = '' disabled/><label for = 'ECheckbox'>E</label>
-            <input type = 'checkbox' id = 'OCheckbox' onclick = '' disabled/><label for = 'OCheckbox'>O</label>
-            <input type = 'checkbox' id = 'RCheckbox' onclick = '' disabled/><label for = 'RCheckbox'>R</label>
-            <input type = 'checkbox' id = 'ShuffleCheckbox' onclick = '' disabled/><label for = 'ShuffleCheckBox'>Shuffle</label>
-        </div>
-        <div>
-            <input type = 'checkbox' id = 'angerCheckbox' onclick = ''/><label for = 'angerCheckbox'>anger</label>
-            <input type = 'checkbox' id = 'anticipationCheckbox' onclick = ''/><label for = 'anticipationCheckbox'>anticipation</label>
-            <input type = 'checkbox' id = 'disgustCheckbox' onclick = ''/><label for = 'disgustCheckbox'>disgust</label>
-            <input type = 'checkbox' id = 'fearCheckbox' onclick = ''/><label for = 'fearCheckbox'>fear</label>
-            <input type = 'checkbox' id = 'joyCheckbox' onclick = ''/><label for = 'joyCheckbox'>joy</label>
-            <input type = 'checkbox' id = 'sadnessCheckbox' onclick = ''/><label for = 'sadnessCheckbox'>sadness</label>
-            <input type = 'checkbox' id = 'surpriseCheckbox' onclick = ''/><label for = 'surpriseCheckbox'>surprise</label>
-            <input type = 'checkbox' id = 'trustCheckbox' onclick = ''/><label for = 'trustCheckbox'>trust</label>
-        </div>
-        <div id = 'overview'>
-            <svg id = 'overviewSVG'/>
-        </div>
-        <div id = 'bandGraph'>
-            <svg id = 'bandGraphSVG'/>
-        </div>
-        <div id = 'scatterPlot'>
-            <svg id = 'scatterPlotSVG'/>
-        </div>
-        <div id = 'rawTweets'>
-            <table id = 'rawTweetsTable'></table>
-        </div>
-        <div id = 'tagCloud'>
-            <svg id = 'tagCloudSVG'>
-        </div>
-        <script src="https://d3js.org/d3.v5.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/gh/holtzy/D3-graph-gallery@master/LIB/d3.layout.cloud.js"></script>
-        <script src = './scripts/main.js'></script>
-        <script src = './scripts/bandGraph.js'></script>
-        <script src = './scripts/tagCloud.js'></script>
-        <script src = './scripts/rawTweets.js'></script>
-        <script src = './scripts/scatterPlot.js'></script>
-        <script src = './scripts/overview.js'></script>
-    </body>
+
+<head>
+    <link rel='stylesheet' type='text/css' href='./css/style.css'>
+    <script src="https://kit.fontawesome.com/fc0a829822.js" crossorigin="anonymous"></script>
+    <title>ECS 272 InfoVis Project</title>
+</head>
+
+<body>
+    <h2>PEARL</h2>
+    <h4>by Xiaotian Zou, Shuotong Wang and Fred Lou</h4>
+    <table id='mainTable'>
+        <tr>
+            <td colspan='2' style='background-image: linear-gradient(#DFDFDF,#C5C5C5);'>
+                <table id='controlTable'>
+                    <tr>
+                        <td style='width: 400px'>
+                            <div id='search'>
+                                <input type='text' id='twitterId' placeholder="Search Here..." /><button
+                                    onclick='getData()' id='searchButton'><i class="fas fa-search"></i></button>
+                            </div>
+                        </td>
+                        <td>
+                            <div id='analysis'>
+                                <label>
+                                    <input type='checkbox' />
+                                    E
+                                </label>
+                                <label>
+                                    <input type='checkbox' />
+                                    O
+                                </label>
+                                <label>
+                                    <input type='checkbox' />
+                                    R
+                                </label>
+                                <label>
+                                    <input type='checkbox' />
+                                    <i class="fas fa-random"></i>
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <table id='legendTable'>
+                                <tr>
+                                    <td>
+                                        <label class='legendLabel'>
+                                            <input type='checkbox' id='angerCheckBox' />
+                                            <span class = 'legendCustom'></span>
+                                            anger
+                                        </label>
+                                    </td>
+                                    <td>
+                                        <label class='legendLabel'>
+                                            <input type='checkbox' id='disgustCheckBox' />
+                                            <span class = 'legendCustom'></span>
+                                            disgust
+                                        </label>
+                                    </td>
+                                    <td>
+                                        <label class='legendLabel'>
+                                            <input type='checkbox' id='joyCheckBox' />
+                                            <span class = 'legendCustom'></span>
+                                            joy
+                                        </label>
+                                    </td>
+                                    <td>
+                                        <label class='legendLabel'>
+                                            <input type='checkbox' id='surpriseCheckBox' />
+                                            <span class = 'legendCustom'></span>
+                                            surprise
+                                        </label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label class='legendLabel'>
+                                            <input type='checkbox' id='anticipationCheckBox' />
+                                            <span class = 'legendCustom'></span>
+                                            anticipation
+                                        </label>
+                                    </td>
+                                    <td>
+                                        <label class='legendLabel'>
+                                            <input type='checkbox' id='fearCheckBox' />
+                                            <span class = 'legendCustom'></span>
+                                            fear
+                                        </label>
+                                    </td>
+                                    <td>
+                                        <label class='legendLabel'>
+                                            <input type='checkbox' id='sadnessCheckBox' />
+                                            <span class = 'legendCustom'></span>
+                                            sadness
+                                        </label>
+                                    </td>
+                                    <td>
+                                        <label class='legendLabel'>
+                                            <input type='checkbox' id='trustCheckBox' />
+                                            <span class = 'legendCustom'></span>
+                                            trust
+                                        </label>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td colspan='2'>
+                <div id='overview'>
+                    <svg id='overviewSVG' />
+                </div>
+                <div id='bandGraph'>
+                    <svg id='bandGraphSVG' />
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div id='scatterPlot'>
+                    <svg id='scatterPlotSVG' />
+                </div>
+            </td>
+            <td>
+                <div id='rawTweets'>
+                    <table id='rawTweetsTable'></table>
+                </div>
+            </td>
+        </tr>
+    </table>
+    <div id='tagCloud'>
+        <svg id='tagCloudSVG'>
+    </div>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/holtzy/D3-graph-gallery@master/LIB/d3.layout.cloud.js"></script>
+    <script src='./scripts/bandGraph.js'></script>
+    <script src='./scripts/tagCloud.js'></script>
+    <script src='./scripts/rawTweets.js'></script>
+    <script src='./scripts/scatterPlot.js'></script>
+    <script src='./scripts/overview.js'></script>
+    <script src='./scripts/main.js'></script>
+</body>
+
 </html>

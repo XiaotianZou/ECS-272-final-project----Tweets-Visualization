@@ -1,0 +1,53 @@
+#tagCloud {
+    position: absolute;
+    background: #FFFFC0;
+    display: none;
+    border-radius: 10px;
+    opacity: 0.9;
+}
+#rawTweets {
+    max-height: 400px;
+    overflow: scroll;
+}
+#mainTable tr td{
+    border: 1px solid #A0A0A0;
+    border-radius: 10px;
+}
+#rawTweetsTable tr td{
+    border-left: none;
+    border-right: none;
+    border-radius: 0px;
+}
+#controlTable tr td{
+    border: none;
+    border-radius: 0px
+}
+#search{
+    float: left
+}
+#analysis{
+    float:left
+}
+input[type=text]{
+    width: 150px;
+    padding: 8px 6px;
+    margin-right: 0px;
+}
+#searchButton{
+    padding: 8px;
+    border-radius: 8px;
+    font-size: 12px;
+    cursor:pointer;
+    background: linear-gradient(#EBEBEB, #E3E3E3, #F0F0F0);
+    margin-left:0px
+}
+#searchButton:hover{
+    background: linear-gradient(#E1E1E1, #D7D7D7, #EBEBEB);
+}
+#searchButton:active{
+    background: white
+}
+
+#legendTable td{
+    width: 100px
+}

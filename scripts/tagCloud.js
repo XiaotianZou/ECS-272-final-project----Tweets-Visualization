@@ -1,14 +1,16 @@
 var tagCloudMargin = { top: 5, bottom: 5, left: 5, right: 5 }
-var tagCloudHeight = 300
-var tagCloudWidth = 300
+var tagCloudHeight = 250
+var tagCloudWidth = 250
 var tagCloudInnerHeight, tagCloudInnerWidth
 
+var tagCloudDIV = null
 var tagCloudSVG = null
 var xScaleTagCloud = null
 
 function initTagCloud() {
     tagCloudInnerHeight = tagCloudHeight - tagCloudMargin.top - tagCloudMargin.bottom
     tagCloudInnerWidth = tagCloudWidth - tagCloudMargin.left - tagCloudMargin.right
+    tagCloudDIV = d3.select('#tagCloud').style('width', tagCloudWidth + 'px')
     d3.select('#tagCloudSVG').selectAll('*').remove()
     tagCloudSVG = d3.select('#tagCloudSVG')
         .attr('width', tagCloudWidth)
