@@ -14,6 +14,10 @@ from nltk.tokenize import word_tokenize, RegexpTokenizer
 from nltk.corpus import stopwords
 import numpy as np
 import csv
+import gensim.downloader as api
+from scipy.spatial import distance
+
+word_vectors = api.load("glove-wiki-gigaword-100")
 
 
 nltk.download('stopwords')
@@ -21,9 +25,9 @@ nltk.download('punkt')
 
 ssl._create_default_https_context = ssl._create_unverified_context
 stops = set(stopwords.words("english"))
-# anew = "static/EnglishShortened.csv"
 anew = 'static/NRC-VAD-Lexicon.txt'
 emo_dict = {'anger': 0, 'anticipation': 1, 'disgust': 2, 'fear': 3, 'joy': 4, 'sadness': 5, 'surprise': 6, 'trust': 7}
+similarity_threshold = 0.9
 
 # GetOldTweets3
 def init_word_emotion_list():
@@ -40,6 +44,21 @@ def init_word_emotion_list():
                     word_dict[components[0]] = [components[1]]
     return word_dict
 
+def get_str_vector(inputs):
+    result = []
+    for word in inputs:
+        try:
+            if word == ' ':
+                continue
+            if  result == []:
+                result.append(np.array(word_vectors[word]))
+            else:
+                result[-1] += np.array(word_vectors[word])
+        except KeyError:
+            pass
+        continue
+    return np.array(result)
+
 def init_vad():
     vad_arr = {}
     f = open(anew)
@@ -50,15 +69,6 @@ def init_vad():
         for i in range(1, 4):
             vad_arr[components[0]].append(float(components[i]))
     return vad_arr
-    # with open(anew) as csvfile:
-    #     reader = csv.DictReader(csvfile)
-    #     for row in reader:
-    #         vad_arr[row['Word']] = []
-    #         vad_arr[row['Word']].append(float(row['valence']))
-    #         vad_arr[row['Word']].append(float(row['arousal']))
-    #         vad_arr[row['Word']].append(float(row['dominance']))
-
-    # return vad_arr
 
 
 def get_tweets_got(user_name, since, until, count=100):
@@ -97,6 +107,32 @@ def get_mean(arr):
             tmp_sum += arr[index][i]
         result.append(tmp_sum / len(arr[index]))
     return result
+
+def get_strs_similarity(vec1, vec2):
+    similarity = 1 - distance.cosine(vec1, vec2)
+    if similarity > similarity_threshold:
+        return True
+    else:
+        return False
+
+def get_cluster(tweets):
+    split_marks = [0]
+    word_list = tweets[0]['text'].split()
+    former_vec = get_str_vector(word_list)
+    for i in range(1, len(tweets)):
+        word_list = tweets[i]['text'].split()
+        vec = get_str_vector(word_list)
+        print(vec)
+        if len(vec) == 0:
+            continue
+        sim = get_strs_similarity(vec, former_vec)
+        if sim == True:
+            split_marks[-1] = i + 1
+        else:
+            split_marks.append(i + 1)
+        former_vec = vec
+    return split_marks
+
 
 def process_tweets(tweets, word_dict, vad_dict):
     """
@@ -139,17 +175,17 @@ def process_tweets(tweets, word_dict, vad_dict):
                     if index == 0:
                         tmp_trigger_words.append([words[i], v, a, d, tmp_p_val])
                     if neg:
-                        v = 5 - (v - 5)
-                        a = 5 - (a - 5)
-                        d = 5 - (d - 5)
+                        v = 1 - v
+                        a = 1 - a
+                        d = 1 - d
+                        # v = 5 - (v - 5)
+                        # a = 5 - (a - 5)
+                        # d = 5 - (d - 5)
                     
                     v_list[index].append(v)
                     a_list[index].append(a)
                     d_list[index].append(d)
         trigger_words_list.extend(tmp_trigger_words)
-    # v_list = np.array(v_list, dtype='float32')
-    # a_list = np.array(a_list, dtype='float32')
-    # d_list = np.array(d_list, dtype='float32')
     return {'time': time_arr,
             'words': words_arr,
             'category': p_arr,
@@ -166,12 +202,10 @@ def index(req):
     vad_dict = init_vad()
     result = {'data': []}
     i = 0
-    while i < 160:
-        result['data'].append(process_tweets(tweets[i: i+4], word_dict, vad_dict))
-        i += 4
-    # for i in range(1, 51):
-    #     result['data'].append(process_tweets(tweets[i], word_dict, vad_dict))
-
+    split_marks = get_cluster(tweets)
+    print(split_marks)
+    for i in range(0, len(split_marks) - 1):
+        result['data'].append(process_tweets(tweets[split_marks[i]: split_marks[i + 1]], word_dict, vad_dict))
     res = HttpResponse(json.dumps(result), content_type="application/json")
     res["Access-Control-Allow-Origin"] = "*"
     res["Access-Control-Allow-Methods"] = "POST, GET, OPTIONS"
