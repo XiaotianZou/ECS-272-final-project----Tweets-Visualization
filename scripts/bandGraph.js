@@ -205,3 +205,10 @@ function drawBandGraph() {
                 .attr('stroke-width', 2)
     }
 }
+
+function mouseClickHandlerAnger() {
+    console.log(document.getElementById('angerCheckBox').checked)
+}
+$('#angerCheckBox').change(function() {
+    console.log($(this).prop('checked'))
+  })

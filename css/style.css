@@ -26,7 +26,8 @@
     float: left
 }
 #analysis{
-    float:left
+    float:left;
+    width: 200px
 }
 input[type=text]{
     width: 150px;
@@ -50,4 +51,52 @@ input[type=text]{
 
 #legendTable td{
     width: 100px
+}
+
+.btn span.glyphicon {    			
+	opacity: 0;				
+}
+.btn.active span.glyphicon {				
+	opacity: 1;				
+}
+
+#angerLabel {
+    background: #EF6664;
+    width: 100%;
+    text-align: left;
+}
+#disgustLabel{
+    background: #9887BB;
+    width: 100%;
+    text-align: left;
+}
+#joyLabel{
+    background: #FFD777;
+    width: 100%;
+    text-align: left;
+}
+#surpriseLabel{
+    background: #25A6D1;
+    width: 100%;
+    text-align: left;
+}
+#anticipationLabel{
+    background: #FAA461;
+    width: 100%;
+    text-align: left;
+}
+#fearLabel{
+    background: #31AE6D;
+    width: 100%;
+    text-align: left;
+}
+#sadnessLabel{
+    background:#679FD3;
+    width: 100%;
+    text-align: left;
+}
+#trustLabel{
+    background: #A5CC68;
+    width: 100%;
+    text-align: left;
 }
