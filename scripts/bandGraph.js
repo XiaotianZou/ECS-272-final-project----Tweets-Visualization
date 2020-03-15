@@ -11,6 +11,7 @@ var xScaleBandGraph, countScaleBandGraph, valanceScaleBandGraph
 
 var hoveredClusterIndex = -1
 var selectedClusterIndex = -1
+var selectedClusterTrigger = null
 
 var tweetCountByDate
 var tweetCountLayers
@@ -32,12 +33,10 @@ function initBandGraph() {
     countScaleBandGraph = d3.scaleLinear().range([bandGraphInnerHeight, 0])
 
     hoveredClusterIndex = -1
+    selectedClusterIndex = -1
 }
 
 function onChangeBandGraph() {
-    bandGraphSVGLayer2.selectAll('*')
-        .remove()
-
     // console.log(allTweets)
     tweetCountByDate = d3.nest().key(function (d) {
         var time = d['time']
@@ -52,11 +51,17 @@ function onChangeBandGraph() {
     var t = new Date(tweetCountByDate[tweetCountByDate.length - 1].key)
     t.setDate(t.getDate() + 1)
     tweetCountByDate.push({ key: t, value: 0 })
-
-    // console.log(tweetCountByDate)
     xScaleBandGraph.domain(d3.extent(tweetCountByDate, function (d) { return Date.parse(d['key']) }))
     countScaleBandGraph.domain([0, 2 * d3.max(tweetCountByDate, function (d) { return d['value'] })])
+    drawBandGraph()
+}
 
+function drawBandGraph() {
+    // console.log(tweetCountByDate)
+    bandGraphSVGLayer1.selectAll('*')
+        .remove()
+    bandGraphSVGLayer2.selectAll('*')
+        .remove()
     var xAxisBandGraph = d3.axisBottom()
         .scale(xScaleBandGraph)
     var countAxisBandGraph = d3.axisRight()
@@ -135,7 +140,7 @@ function onChangeBandGraph() {
         if(j == -1) return
         if(j != selectedClusterIndex) {
             selectedClusterIndex = j
-            bandGraphSVGLayer1.selectAll('.streamSelection').remove()
+            d3.selectAll('.streamSelection').remove()
             bandGraphSVGLayer1.append('line')
                 .attr('class', 'streamSelection')
                 .attr('x1', xScaleBandGraph(data[j]['earlyTime']))
@@ -144,6 +149,19 @@ function onChangeBandGraph() {
                 .attr('y2', bandGraphInnerHeight)
                 .attr('stroke', 'red')
                 .attr('stroke-width', 2)
+            overviewSVG.append('line')
+                .attr('class', 'streamSelection')
+                .attr('x1', xScaleOverview(data[j]['earlyTime']))
+                .attr('x2', xScaleOverview(data[j]['earlyTime']))
+                .attr('y1', 0)
+                .attr('y2', overviewInnerHeight)
+                .attr('stroke', 'red')
+                .attr('stroke-width', 2)
+            selectedClusterTrigger = []
+            data[selectedClusterIndex]['trigger'].forEach(function(d) {
+                selectedClusterTrigger.push(d[0])
+            })
+            console.log(selectedClusterTrigger)
             onChangeRawTweets()
             onChangeScatterPlot()
         }
@@ -167,4 +185,16 @@ function onChangeBandGraph() {
     bandGraphSVGLayer2.append('g')
         .call(countAxisBandGraph)
         .attr('transform', 'translate(' + bandGraphInnerWidth + ', 0)')
+    
+    // Draw the red line if there is cluster selected
+    if(selectedClusterIndex != -1) {
+        bandGraphSVGLayer1.append('line')
+                .attr('class', 'streamSelection')
+                .attr('x1', xScaleBandGraph(data[selectedClusterIndex]['earlyTime']))
+                .attr('x2', xScaleBandGraph(data[selectedClusterIndex]['earlyTime']))
+                .attr('y1', 0)
+                .attr('y2', bandGraphInnerHeight)
+                .attr('stroke', 'red')
+                .attr('stroke-width', 2)
+    }
 }
