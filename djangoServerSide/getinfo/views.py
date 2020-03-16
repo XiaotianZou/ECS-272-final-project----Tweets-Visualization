@@ -27,7 +27,7 @@ ssl._create_default_https_context = ssl._create_unverified_context
 stops = set(stopwords.words("english"))
 anew = 'static/NRC-VAD-Lexicon.txt'
 emo_dict = {'anger': 0, 'anticipation': 1, 'disgust': 2, 'fear': 3, 'joy': 4, 'sadness': 5, 'surprise': 6, 'trust': 7}
-similarity_threshold = 0.7
+similarity_threshold = 0.75
 
 # GetOldTweets3
 def init_word_emotion_list():

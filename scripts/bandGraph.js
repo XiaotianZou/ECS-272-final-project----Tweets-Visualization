@@ -10,6 +10,7 @@ var bandGraphSVGLayer2 = null
 var valenceBandWidth = 0.3
 
 var xScaleBandGraph, countScaleBandGraph, valenceScaleBandGraph, colorScaleBandGraph
+var dominanceScaleBandGraph
 
 var hoveredClusterIndex = -1
 var selectedClusterIndex = -1
@@ -24,6 +25,9 @@ var mouseLeaveHandlerStream, mouseOverHandlerStream, mouseMoveHandlerStream
 
 var areaBand, valenceLayers
 var mouseLeaveHandlerBand, mouseOverHandlerBand
+
+var emotionBubbleRadius1 = 6
+var emotionBubbleRadius2 = 15
 
 function initBandGraph() {
     bandGraphInnerHeight = bandGraphHeight - bandGraphMargin.top - bandGraphMargin.bottom
@@ -47,6 +51,7 @@ function initBandGraph() {
     countScaleBandGraph = d3.scaleLinear().range([bandGraphInnerHeight, 0])
     valenceScaleBandGraph = d3.scaleLinear().range([bandGraphInnerHeight, 0]).domain([0, 1])
     colorScaleBandGraph = d3.scaleOrdinal().range(emotionColors.slice().reverse())
+    dominanceScaleBandGraph = d3.scaleLinear().range([-Math.PI / 4, Math.PI / 4])
 
     hoveredClusterIndex = -1
     selectedClusterIndex = -1
@@ -185,7 +190,13 @@ function onChangeBandGraph() {
             var o = {}
             o['index'] = i
             o['earlyTime'] = d['earlyTime']
-            o['valence'] = arrayAverage(d['valence'])
+            var valence = 0, dominance = 0
+            for (var j = 0; j < d['category'].length; j++) {
+                valence += d['category'][j] / sum * d['valence'][j]
+                dominance += d['category'][j] / sum * d['dominance'][j]
+            }
+            o['valence'] = valence
+            o['dominance'] = dominance
             o['anger'] = d['category'][0] * valenceBandWidth / sum
             o['anticipation'] = d['category'][1] * valenceBandWidth / sum
             o['disgust'] = d['category'][2] * valenceBandWidth / sum
@@ -330,6 +341,29 @@ function drawBandGraph() {
         .attr('d', areaBand)
         .on('mouseover', mouseOverHandlerBand)
         .on('mouseleave', mouseLeaveHandlerBand)
+
+    for (var i = 0; i < emotionCategoryByCluster.length; i++) {
+        var dominance = emotionCategoryByCluster[i]['dominance']
+        var emotionBubbleLayer = bandGraphSVGLayer3.append('g')
+            .attr('transform', 'translate(' + xScaleBandGraph(emotionCategoryByCluster[i]['earlyTime']) + ', ' + valenceScaleBandGraph(emotionCategoryByCluster[i]['valence']) + ')')
+            .attr('id', 'emotionBubbleLayer' + emotionCategoryByCluster[i]['index'])
+            .attr('data-index', emotionCategoryByCluster[i]['index'])
+        emotionBubbleLayer.append('circle')
+            .attr('cx', 0)
+            .attr('cy', 0)
+            .attr('r', 6)
+            .style('fill', '#A4AA99')
+            .attr('stroke', 'black')
+
+        emotionBubbleLayer.append('line')
+            .attr('x1', -Math.cos(dominanceScaleBandGraph(dominance)) * (emotionBubbleRadius1 - 1))
+            .attr('y1', Math.sin(dominanceScaleBandGraph(dominance)) * (emotionBubbleRadius1 - 1))
+            .attr('x2', Math.cos(dominanceScaleBandGraph(dominance)) * (emotionBubbleRadius1 - 1))
+            .attr('y2', -Math.sin(dominanceScaleBandGraph(dominance)) * (emotionBubbleRadius1 - 1))
+            .attr('stroke', 'white')
+            .attr('stroke-width', '1px')
+            .style('marker-end', 'url(#arrow)')
+    }
 
     bandGraphSVGLayer2.append('g')
         .call(valenceAxisBandGraph)

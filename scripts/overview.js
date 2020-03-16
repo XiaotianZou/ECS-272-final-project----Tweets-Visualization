@@ -49,8 +49,18 @@ function onChangeOverview() {
     data.forEach(function (d) {
         var o = {}
         o['earlyTime'] = d['earlyTime']
-        o['valence'] = arrayAverage(d['valence'])
-        avgValenceByCluster.push(o)
+        // o['valence'] = arrayAverage(d['valence'])
+        if(arraySum(d['category']) == 0) {
+            o['valence'] = 0
+        } else {
+            var sum = arraySum(d['category'])
+            var valence = 0
+            for(var i = 0; i < d['category'].length; i++) {
+                valence += d['category'][i] / sum * d['valence'][i]
+            }
+            o['valence'] = valence
+            avgValenceByCluster.push(o)
+        }
     })
     // console.log(avgValenceByCluster)
     var line = d3.line()
