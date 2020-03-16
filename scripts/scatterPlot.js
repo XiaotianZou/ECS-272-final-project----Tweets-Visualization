@@ -1,6 +1,6 @@
-var scatterPlotMargin = {top: 20, left: 20, right: 20, bottom: 20}
-var scatterPlotWidth = 450
-var scatterPlotHeight = 400
+var scatterPlotMargin = { top: 20, left: 20, right: 20, bottom: 20 }
+var scatterPlotWidth = 300
+var scatterPlotHeight = 300
 var scatterPlotInnerWidth, scatterPlotInnerHeight
 var emotionColors = ['#EF6664', '#FAA461', '#9887BB', '#31AE6D', '#FFD777', '#679FD3', '#25A6D1', '#A5CC68']
 var emotionCategories = ['anger', 'anticipation', 'disgust', 'fear', 'joy', 'sadness', 'surprise', 'trust']
@@ -38,7 +38,7 @@ function onChangeScatterPlot() {
         .attr('height', scatterPlotHeight)
     scatterPlotSVGDefaultLayer = scatterPlotSVG.append('g')
         .attr('transform', 'translate(' + scatterPlotMargin.left + ', ' + scatterPlotMargin.top + ')')
-    for(var i = 0; i < data[selectedClusterIndex]['trigger'].length; i++) {
+    for (var i = 0; i < data[selectedClusterIndex]['trigger'].length; i++) {
         colorScaleScatterPlot.domain(data[selectedClusterIndex]['trigger'][i][4])
         var scatterPlotSVGPieLayer = scatterPlotSVG.append('g')
             .attr('transform', 'translate(' + (scatterPlotMargin.left + xScaleScatterPlot(data[selectedClusterIndex]['trigger'][i][2])) + ', ' + (scatterPlotMargin.top + yScaleScatterPlot(data[selectedClusterIndex]['trigger'][i][1])) + ')')
@@ -48,7 +48,7 @@ function onChangeScatterPlot() {
         var arc = d3.arc()
             .innerRadius(0)
             .outerRadius(sizeScaleScatterPlot(data[selectedClusterIndex]['trigger'][i][3]))
-        var mouseOverHandlerScatterPlot = function(d, j){
+        var mouseOverHandlerScatterPlot = function (d, j) {
             var i = this.parentNode.getAttribute('data-index')
             scatterPlotSVG.selectAll('path')
                 .style('opacity', 0.6)
@@ -69,9 +69,9 @@ function onChangeScatterPlot() {
                 .text(data[selectedClusterIndex]['trigger'][i][0])
                 .attr('font-family', 'serif')
                 .attr('font-size', '12px')
-            for(var j = 0; j < data[selectedClusterIndex]['words'].length; j++) {
+            for (var j = 0; j < data[selectedClusterIndex]['words'].length; j++) {
                 var split = data[selectedClusterIndex]['words'][j].split(/([ ,.!?]+)/g)
-                if(split.includes(selectedClusterTrigger[i])) {
+                if (split.includes(selectedClusterTrigger[i])) {
                     d3.select('#rawTweetsTableTd' + j)
                         .style('background-color', 'orange')
                 } else {
@@ -80,7 +80,7 @@ function onChangeScatterPlot() {
                 }
             }
         }
-        var mouseLeaveHandlerScatterPlot = function(d, j){
+        var mouseLeaveHandlerScatterPlot = function (d, j) {
             scatterPlotSVG.selectAll('path')
                 .style('opacity', 1.0)
                 .attr('stroke', 'transparent')
@@ -105,7 +105,17 @@ function onChangeScatterPlot() {
     scatterPlotSVGDefaultLayer.append('g')
         .call(xAxisScatterPlot)
         .attr('transform', 'translate(0, ' + scatterPlotInnerHeight / 2 + ')')
+    scatterPlotSVGDefaultLayer.append('text')
+        .attr('x', scatterPlotInnerWidth - 35)
+        .attr('y', scatterPlotInnerHeight / 2 - 2)
+        .style('font-size', '10px')
+        .text('Arousal')
     scatterPlotSVGDefaultLayer.append('g')
         .call(yAxisScatterPlot)
         .attr('transform', 'translate(' + scatterPlotInnerWidth / 2 + ', 0)')
+    scatterPlotSVGDefaultLayer.append('text')
+        .attr('x', scatterPlotInnerWidth / 2 - 38)
+        .attr('y', 6)
+        .style('font-size', '10px')
+        .text('Valence')
 }

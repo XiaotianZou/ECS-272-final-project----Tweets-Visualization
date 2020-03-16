@@ -1,16 +1,18 @@
-var rawTweetsCellWidth = 450
+var rawTweetsCellWidth = 600
 
 var rawTweetsTable = null
 
 function initRawTweets() {
     rawTweetsTable = d3.select('#rawTweetsTable')
+    rawTweetsTable.selectAll('*')
+        .remove()
 }
 
 function onChangeRawTweets() {
     var mouseOverHandlerRawTweets = function (d, i) {
-        bandGraphSVGLayer2.selectAll('.rawTweetsHovering').remove()
+        bandGraphSVGLayer3.selectAll('.rawTweetsHovering').remove()
         var tweetTime = data[selectedClusterIndex].time[i]
-        bandGraphSVGLayer2.append('circle')
+        bandGraphSVGLayer3.append('circle')
             .attr('class', 'rawTweetsHovering')
             .attr('cx', xScaleBandGraph(tweetTime))
             .attr('cy', bandGraphInnerHeight - 8)
@@ -44,7 +46,7 @@ function onChangeRawTweets() {
         }
     }
     var mouseLeaveHandlerRawTweets = function (d, i) {
-        bandGraphSVGLayer2.selectAll('.rawTweetsHovering').remove()
+        bandGraphSVGLayer3.selectAll('.rawTweetsHovering').remove()
         rawTweetsTable.selectAll('td')
             .style('background-color', 'transparent')
         scatterPlotSVG.selectAll('path')
