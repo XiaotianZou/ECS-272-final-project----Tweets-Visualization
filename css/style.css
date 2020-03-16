@@ -12,7 +12,7 @@
     border-radius: 10px;
     opacity: 0.9;
     padding: 10px 10px 10px 10px;
-    font-size: 8px
+    font-size: 9px
 }
 #rawTweets {
     max-height: 300px;
@@ -42,6 +42,7 @@ input[type=text]{
     width: 150px;
     padding: 8px 6px;
     margin-right: 0px;
+    margin-left:10px
 }
 #searchButton{
     padding: 8px;
@@ -108,4 +109,10 @@ input[type=text]{
     background: #A5CC68;
     width: 100%;
     text-align: left;
+}
+#mainTable{
+    margin: auto
+}
+body{
+    text-align:center
 }

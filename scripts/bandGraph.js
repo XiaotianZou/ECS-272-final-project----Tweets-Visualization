@@ -177,7 +177,6 @@ function onChangeBandGraph() {
             data[selectedClusterIndex]['trigger'].forEach(function (d) {
                 selectedClusterTrigger.push(d[0])
             })
-            console.log(selectedClusterTrigger)
             onChangeRawTweets()
             onChangeScatterPlot()
         }
@@ -352,16 +351,87 @@ function drawBandGraph() {
         emotionTooltipDIV.style('left', (d3.event.pageX + 20) + 'px')
             .style('top', (d3.event.pageY + 20) + 'px')
             .style('display', 'block')
-        emotionBubbleHoveringLayer = emotionBubbleLayer.append('g')
-            .attr('transform', 'translate(0, 0)')
+        emotionBubbleHoveringLayer = bandGraphSVGLayer3.append('g')
+            .attr('transform', document.getElementById('emotionBubbleLayer' + hoveredEmotionBubbleIndex).getAttribute('transform'))
             .attr('class', 'emotionBubbleHovering')
-        emotionBubbleHoveringLayer.append('circle')
-            .attr('cx', 0)
-            .attr('cy', 0)
-            .attr('r', emotionBubbleRadius2)
-            .style('fill', 'white')
-            .style('opacity', 0.2)
+        var root = {}
+        root['name'] = 'Categories'
+        var children = []
+        var sum = arraySum(data[hoveredEmotionBubbleIndex]['category'])
+        for(var i = 0; i < data[hoveredEmotionBubbleIndex]['category'].length; i++) {
+            if(data[hoveredEmotionBubbleIndex]['category'][i] == 0) continue
+            var o = {}
+            o['name'] = emotionCategories[i]
+            o['size'] = data[hoveredEmotionBubbleIndex]['category'][i] / sum
+            o['dominance'] = data[hoveredEmotionBubbleIndex]['dominance'][i]
+            children.push(o)
+        }
+        root['children'] = children
+        var pack = d3.pack()
+            .size([emotionBubbleRadius2 * 2, emotionBubbleRadius2 * 2])
+            .padding(1)
+        root = d3.hierarchy(root)
+            .sum(function(d) {
+                return d.size
+            })
+            .sort(function(a, b) {
+                return b.value - a.value
+            })
+        var nodes = pack(root).descendants()
+        var k = emotionBubbleRadius2 * 2 / (root.r * 2)
+        emotionBubbleHoveringLayer.selectAll('circle')
+            .data(nodes)
+            .enter()
+            .append('circle')
+            .attr('transform', function(d) {
+                return 'translate(' + (d.x - root.x) * k + ', ' + (d.y - root.y) * k + ')'
+            })
+            .attr('r', function(d) {
+                return d.r * k
+            })
+            // .style('display', function(d) {
+            //     if(d.parent == null) return 'none'
+            //     else return 'block'
+            // })
+            .style('fill', function(d) {
+                if(d.parent == null) return 'white'
+                return emotionColors[emotionCategories.indexOf(d['data']['name'])]
+            })
             .attr('stroke', 'black')
+            .style('opacity', function(d) {
+                if(d.parent == null) return 0.4
+                else return 1
+            })
+        emotionBubbleHoveringLayer.selectAll('line')
+            .data(nodes.slice(1, nodes.length))
+            .enter()
+            .append('line')
+            .attr('transform', function(d) {
+                return 'translate(' + (d.x - root.x) * k + ', ' + (d.y - root.y) * k + ')'
+            })
+            .attr('x1', function(d) {
+                return -(d.r * k) * Math.cos(dominanceScaleBandGraph(d['data']['dominance']))
+            })
+            .attr('y1', function(d) {
+                return (d.r * k) * Math.sin(dominanceScaleBandGraph(d['data']['dominance']))
+            })
+            .attr('x2', function(d) {
+                return (d.r * k) * Math.cos(dominanceScaleBandGraph(d['data']['dominance']))
+            })
+            .attr('y2', function(d) {
+                return -(d.r * k) * Math.sin(dominanceScaleBandGraph(d['data']['dominance']))
+            })
+            .attr('stroke', 'white')
+            .attr('stroke-width', '1px')
+            .style('marker-end', 'url(#arrow)')
+        emotionBubbleHoveringLayer
+            // .append('circle')
+            // .attr('cx', 0)
+            // .attr('cy', 0)
+            // .attr('r', emotionBubbleRadius2)
+            // .style('fill', 'white')
+            // .style('opacity', 0.2)
+            // .attr('stroke', 'black')
             .on('mouseleave', function () {
                 d3.selectAll('.emotionBubbleHovering')
                     .remove()

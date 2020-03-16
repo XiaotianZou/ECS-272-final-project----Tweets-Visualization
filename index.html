@@ -30,8 +30,9 @@
                     <tr>
                         <td style='width: 400px'>
                             <div id='search'>
-                                <input type='text' id='twitterUserName' placeholder="Search Here..." autofocus/>
-                                    <button type="button" class="btn btn-light" onclick='getData()' id='searchButton'><i class="fas fa-search"></i></button>
+                                <input type='text' id='twitterUserName' placeholder="Search Here..." autofocus />
+                                <button type="button" class="btn btn-light" onclick='getData()' id='searchButton'><i
+                                        class="fas fa-search"></i></button>
                             </div>
                         </td>
                         <td>
@@ -47,60 +48,61 @@
                         <td>
                             <table id='legendTable'>
                                 <tr>
-                                    <td class = 'btn-group-toggle' data-toggle='buttons'>
+                                    <td class='btn-group-toggle' data-toggle='buttons'>
                                         <label class="btn btn-danger active" id='angerLabel'>
-                                            <input type='checkbox' id='angerCheckBox' autocomplete="off" checked/>
+                                            <input type='checkbox' id='angerCheckBox' autocomplete="off" checked />
                                             <span class='glyphicon glyphicon-ok'></span>
                                             anger
                                         </label>
                                     </td>
-                                    <td class = 'btn-group-toggle' data-toggle='buttons'>
+                                    <td class='btn-group-toggle' data-toggle='buttons'>
                                         <label class="btn btn-primary active" id='disgustLabel'>
-                                            <input type='checkbox' id='disgustCheckBox' autocomplete="off" checked/>
+                                            <input type='checkbox' id='disgustCheckBox' autocomplete="off" checked />
                                             <span class='glyphicon glyphicon-ok'></span>
                                             disgust
                                         </label>
                                     </td>
-                                    <td class = 'btn-group-toggle' data-toggle='buttons'>
+                                    <td class='btn-group-toggle' data-toggle='buttons'>
                                         <label class="btn btn-warning active" id='joyLabel'>
-                                            <input type='checkbox' id='joyCheckBox' autocomplete="off" checked/>
+                                            <input type='checkbox' id='joyCheckBox' autocomplete="off" checked />
                                             <span class='glyphicon glyphicon-ok'></span>
                                             joy
                                         </label>
                                     </td>
-                                    <td class = 'btn-group-toggle' data-toggle='buttons'>
+                                    <td class='btn-group-toggle' data-toggle='buttons'>
                                         <label class="btn btn-info active" id='surpriseLabel'>
-                                            <input type='checkbox' id='surpriseCheckBox' autocomplete="off" checked/>
+                                            <input type='checkbox' id='surpriseCheckBox' autocomplete="off" checked />
                                             <span class='glyphicon glyphicon-ok'></span>
                                             surprise
                                         </label>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class = 'btn-group-toggle' data-toggle='buttons'>
+                                    <td class='btn-group-toggle' data-toggle='buttons'>
                                         <label class="btn btn-warning active" id='anticipationLabel'>
-                                            <input type='checkbox' id='anticipationCheckBox' autocomplete="off" checked/>
+                                            <input type='checkbox' id='anticipationCheckBox' autocomplete="off"
+                                                checked />
                                             <span class='glyphicon glyphicon-ok'></span>
                                             anticipation
                                         </label>
                                     </td>
-                                    <td class = 'btn-group-toggle' data-toggle='buttons'>
+                                    <td class='btn-group-toggle' data-toggle='buttons'>
                                         <label class="btn btn-success active" id='fearLabel'>
-                                            <input type='checkbox' id='fearCheckBox' autocomplete="off" checked/>
+                                            <input type='checkbox' id='fearCheckBox' autocomplete="off" checked />
                                             <span class='glyphicon glyphicon-ok'></span>
                                             fear
                                         </label>
                                     </td>
-                                    <td class = 'btn-group-toggle' data-toggle='buttons'>
+                                    <td class='btn-group-toggle' data-toggle='buttons'>
                                         <label class="btn btn-primary active" id='sadnessLabel'>
-                                            <input type='checkbox' id='sadnessCheckBox' autocomplete="off" checked/>
+                                            <input type='checkbox' id='sadnessCheckBox' autocomplete="off" checked />
                                             <span class='glyphicon glyphicon-ok'></span>
                                             sadness
                                         </label>
                                     </td>
-                                    <td class = 'btn-group-toggle' data-toggle='buttons'>
+                                    <td class='btn-group-toggle' data-toggle='buttons'>
                                         <label class="btn btn-success active" id='trustLabel'>
-                                            <input type='checkbox' id='trustCheckBox' autocomplete="off" checked/>
+                                            <input type='checkbox' id='trustCheckBox' autocomplete="off" checked />
                                             <span class='glyphicon glyphicon-ok'></span>
                                             trust
                                         </label>
@@ -134,11 +136,14 @@
             </td>
         </tr>
     </table>
+    Zhao, J., Gou, L., Wang, F., & Zhou, M. (2014, October). Pearl: An interactive visual analytic tool for
+    understanding personal emotion style derived from social media. In 2014 IEEE Conference on Visual Analytics Science
+    and Technology (VAST) (pp. 203-212). IEEE.
     <div id='tagCloud'>
         <svg id='tagCloudSVG'>
     </div>
     <div id='emotionTooltip'>
-        
+
     </div>
     <script src="https://d3js.org/d3.v5.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/holtzy/D3-graph-gallery@master/LIB/d3.layout.cloud.js"></script>

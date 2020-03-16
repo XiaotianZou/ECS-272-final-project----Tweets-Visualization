@@ -9,8 +9,6 @@ function getData() {
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function () {
             if (this.readyState == 4 && this.status == 200) {
-                init()
-
                 data = JSON.parse(this.responseText).data
 
                 data.forEach(function (d) {
@@ -33,9 +31,16 @@ function getData() {
                         allTweets.push(o)
                     }
                 })
-
-                onChangeBandGraph()
-                onChangeOverview()
+                if(data.length < 2) {
+                    alert('Sorry, we cannot visualize the emotion for you. Please write more tweets!')
+                } else {
+                    init()
+                    onChangeBandGraph()
+                    onChangeOverview()
+                }
+            } 
+            if (this.readyState == 4 && this.status == 500) {
+                alert('Sorry, we cannot visualize the emotion for you. Please check the correctness of username!')
             }
         }
         xhttp.open('GET', 'http://127.0.0.1:8000/getinfo/?id=' + username, true)
