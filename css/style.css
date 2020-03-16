@@ -5,6 +5,7 @@
     border-radius: 10px;
     opacity: 0.9;
 }
+
 #emotionTooltip {
     position: absolute;
     background: #FFFFC0;
@@ -14,60 +15,75 @@
     padding: 10px 10px 10px 10px;
     font-size: 9px
 }
+
 #rawTweets {
     max-height: 300px;
     overflow: scroll;
 }
-#mainTable tr td{
+
+#mainTable tr td {
     border: 1px solid #A0A0A0;
     border-radius: 10px;
 }
-#rawTweetsTable tr td{
+
+#rawTweetsTable tr td {
     border-left: none;
     border-right: none;
     border-radius: 0px;
 }
-#controlTable tr td{
+
+#rawTweetsTable {
+    margin: auto
+}
+
+#controlTable tr td {
     border: none;
     border-radius: 0px
 }
-#search{
+
+#search {
     float: left
 }
-#analysis{
-    float:left;
+
+#analysis {
+    float: left;
     width: 200px
 }
-input[type=text]{
+
+input[type=text] {
     width: 150px;
     padding: 8px 6px;
     margin-right: 0px;
-    margin-left:10px
+    margin-left: 10px
 }
-#searchButton{
+
+#searchButton {
     padding: 8px;
     border-radius: 8px;
     font-size: 12px;
-    cursor:pointer;
+    cursor: pointer;
     background: linear-gradient(#EBEBEB, #E3E3E3, #F0F0F0);
-    margin-left:0px
+    margin-left: 0px
 }
-#searchButton:hover{
+
+#searchButton:hover {
     background: linear-gradient(#E1E1E1, #D7D7D7, #EBEBEB);
 }
-#searchButton:active{
+
+#searchButton:active {
     background: white
 }
 
-#legendTable td{
+#legendTable td {
     width: 100px
 }
 
-.btn span.glyphicon {    			
-	opacity: 0;				
+.btn span.glyphicon {
+    opacity: 0;
 }
-.btn.active span.glyphicon {				
-	opacity: 1;				
+
+.btn.active span.glyphicon {
+    opacity: 1;
 }
 
 #angerLabel {
@@ -75,44 +91,54 @@ input[type=text]{
     width: 100%;
     text-align: left;
 }
-#disgustLabel{
+
+#disgustLabel {
     background: #9887BB;
     width: 100%;
     text-align: left;
 }
-#joyLabel{
+
+#joyLabel {
     background: #FFD777;
     width: 100%;
     text-align: left;
 }
-#surpriseLabel{
+
+#surpriseLabel {
     background: #25A6D1;
     width: 100%;
     text-align: left;
 }
-#anticipationLabel{
+
+#anticipationLabel {
     background: #FAA461;
     width: 100%;
     text-align: left;
 }
-#fearLabel{
+
+#fearLabel {
     background: #31AE6D;
     width: 100%;
     text-align: left;
 }
-#sadnessLabel{
-    background:#679FD3;
+
+#sadnessLabel {
+    background: #679FD3;
     width: 100%;
     text-align: left;
 }
-#trustLabel{
+
+#trustLabel {
     background: #A5CC68;
     width: 100%;
     text-align: left;
 }
-#mainTable{
-    margin: auto
+
+#mainTable {
+    margin: auto;
+    text-align: left
 }
-body{
-    text-align:center
+
+body {
+    text-align: center
 }
