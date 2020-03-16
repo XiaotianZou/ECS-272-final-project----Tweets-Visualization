@@ -7,3 +7,7 @@
 - Enter the root directory
 - Open your terminal and type 'python3 manage.py runserver'
 - open http://127.0.0.1:8000/getinfo/ in your browser(make sure your port number is 8000)
+
+## How to Run the Client Side
+- Open Chrome **with web security DISABLED**
+- Open index.html using that browser
