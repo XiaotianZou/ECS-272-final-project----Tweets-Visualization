@@ -14,6 +14,7 @@ var dominanceScaleBandGraph
 
 var hoveredClusterIndex = -1
 var selectedClusterIndex = -1
+var hoveredEmotionBubbleIndex = -1
 var selectedClusterTrigger = null
 
 var tweetCountByDate
@@ -27,7 +28,7 @@ var areaBand, valenceLayers
 var mouseLeaveHandlerBand, mouseOverHandlerBand
 
 var emotionBubbleRadius1 = 6
-var emotionBubbleRadius2 = 15
+var emotionBubbleRadius2 = 30
 
 function initBandGraph() {
     bandGraphInnerHeight = bandGraphHeight - bandGraphMargin.top - bandGraphMargin.bottom
@@ -55,6 +56,7 @@ function initBandGraph() {
 
     hoveredClusterIndex = -1
     selectedClusterIndex = -1
+    hoveredEmotionBubbleIndex = -1
 }
 
 function onChangeBandGraph() {
@@ -342,6 +344,58 @@ function drawBandGraph() {
         .on('mouseover', mouseOverHandlerBand)
         .on('mouseleave', mouseLeaveHandlerBand)
 
+    var mouseOverHandlerEmotionBubble = function () {
+        hoveredEmotionBubbleIndex = this.parentNode.getAttribute('data-index')
+        var emotionBubbleLayer = d3.select('#emotionBubbleLayer' + hoveredEmotionBubbleIndex)
+        // console.log(emotionBubbleLayer)
+        onChangeEmotionTooltip()
+        emotionTooltipDIV.style('left', (d3.event.pageX + 20) + 'px')
+            .style('top', (d3.event.pageY + 20) + 'px')
+            .style('display', 'block')
+        emotionBubbleHoveringLayer = emotionBubbleLayer.append('g')
+            .attr('transform', 'translate(0, 0)')
+            .attr('class', 'emotionBubbleHovering')
+        emotionBubbleHoveringLayer.append('circle')
+            .attr('cx', 0)
+            .attr('cy', 0)
+            .attr('r', emotionBubbleRadius2)
+            .style('fill', 'white')
+            .style('opacity', 0.2)
+            .attr('stroke', 'black')
+            .on('mouseleave', function () {
+                d3.selectAll('.emotionBubbleHovering')
+                    .remove()
+                emotionTooltipDIV.style('display', 'none')
+                hoveredEmotionBubbleIndex = -1
+            })
+            .on('click', function () {
+                selectedClusterIndex = hoveredEmotionBubbleIndex
+                d3.selectAll('.streamSelection').remove()
+                bandGraphSVGLayer1.append('line')
+                    .attr('class', 'streamSelection')
+                    .attr('x1', xScaleBandGraph(data[selectedClusterIndex]['earlyTime']))
+                    .attr('x2', xScaleBandGraph(data[selectedClusterIndex]['earlyTime']))
+                    .attr('y1', 0)
+                    .attr('y2', bandGraphInnerHeight)
+                    .attr('stroke', 'red')
+                    .attr('stroke-width', 2)
+                overviewSVG.append('line')
+                    .attr('class', 'streamSelection')
+                    .attr('x1', xScaleOverview(data[selectedClusterIndex]['earlyTime']))
+                    .attr('x2', xScaleOverview(data[selectedClusterIndex]['earlyTime']))
+                    .attr('y1', 0)
+                    .attr('y2', overviewInnerHeight)
+                    .attr('stroke', 'red')
+                    .attr('stroke-width', 2)
+                selectedClusterTrigger = []
+                data[selectedClusterIndex]['trigger'].forEach(function (d) {
+                    selectedClusterTrigger.push(d[0])
+                })
+                onChangeRawTweets()
+                onChangeScatterPlot()
+            })
+    }
+
     for (var i = 0; i < emotionCategoryByCluster.length; i++) {
         var dominance = emotionCategoryByCluster[i]['dominance']
         var emotionBubbleLayer = bandGraphSVGLayer3.append('g')
@@ -351,9 +405,10 @@ function drawBandGraph() {
         emotionBubbleLayer.append('circle')
             .attr('cx', 0)
             .attr('cy', 0)
-            .attr('r', 6)
+            .attr('r', emotionBubbleRadius1)
             .style('fill', '#A4AA99')
             .attr('stroke', 'black')
+            .on('mouseover', mouseOverHandlerEmotionBubble)
 
         emotionBubbleLayer.append('line')
             .attr('x1', -Math.cos(dominanceScaleBandGraph(dominance)) * (emotionBubbleRadius1 - 1))

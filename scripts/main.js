@@ -58,6 +58,7 @@ function init() {
     initRawTweets()
     initScatterPlot()
     initOverview()
+    initEmotionTooltip()
 }
 
 init()
