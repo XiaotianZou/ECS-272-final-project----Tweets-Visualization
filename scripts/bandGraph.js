@@ -1,5 +1,5 @@
 var bandGraphMargin = { top: 3, left: 30, right: 30, bottom: 30 }
-var bandGraphWidth = 900
+var bandGraphWidth = 1000
 var bandGraphHeight = 300
 var bandGraphInnerHeight, bandGraphInnerWidth
 
@@ -178,11 +178,12 @@ function onChangeBandGraph() {
 
     // Prepare Data for Band
     emotionCategoryByCluster = []
-    data.forEach(function (d) {
+    data.forEach(function (d, i) {
         var category = d['category']
         var sum = arraySum(category)
         if (sum != 0) {
             var o = {}
+            o['index'] = i
             o['earlyTime'] = d['earlyTime']
             o['valence'] = arrayAverage(d['valence'])
             o['anger'] = d['category'][0] * valenceBandWidth / sum
@@ -291,6 +292,11 @@ function drawBandGraph() {
     bandGraphSVGLayer2.append('g')
         .call(countAxisBandGraph)
         .attr('transform', 'translate(' + bandGraphInnerWidth + ', 0)')
+    bandGraphSVGLayer2.append('text')
+        .attr('x', bandGraphInnerWidth - 35)
+        .attr('y', 8)
+        .style('font-size', '10px')
+        .text('Tweets')
 
     // Draw the red line if there is cluster selected
     if (selectedClusterIndex != -1) {
@@ -327,4 +333,9 @@ function drawBandGraph() {
 
     bandGraphSVGLayer2.append('g')
         .call(valenceAxisBandGraph)
+    bandGraphSVGLayer2.append('text')
+        .attr('x', 5)
+        .attr('y', 8)
+        .style('font-size', '10px')
+        .text('Valence')
 }

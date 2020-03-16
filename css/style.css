@@ -6,7 +6,7 @@
     opacity: 0.9;
 }
 #rawTweets {
-    max-height: 400px;
+    max-height: 300px;
     overflow: scroll;
 }
 #mainTable tr td{
