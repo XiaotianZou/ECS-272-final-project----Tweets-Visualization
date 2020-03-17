@@ -112,6 +112,7 @@ STATICFILES_DIRS = (
     ('fonts', os.path.join(STATIC_ROOT, 'fonts').replace('\\', '/')),
     ('csv', os.path.join(STATIC_ROOT, 'csv').replace('\\', '/')),
     ('txt', os.path.join(STATIC_ROOT, 'txt').replace('\\', '/')),
+    ('html', os.path.join(STATIC_ROOT, 'html').replace('\\', '/')),
 )
 
 
