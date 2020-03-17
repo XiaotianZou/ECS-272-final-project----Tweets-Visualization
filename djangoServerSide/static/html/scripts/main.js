@@ -43,7 +43,7 @@ function getData() {
                 alert('Sorry, we cannot visualize the emotion for you. Please check the correctness of username!')
             }
         }
-        xhttp.open('GET', 'http://127.0.0.1:8000/getinfo/?id=' + username, true)
+        xhttp.open('GET', '../../getinfo/?id=' + username, true)
         // xhttp.setRequestHeader('Content-Type', 'application/json')
         xhttp.send()
     }
