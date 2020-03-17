@@ -6,14 +6,15 @@
     opacity: 0.9;
 }
 
-#emotionTooltip {
+#emotionTooltip, #triggerTooltip{
     position: absolute;
     background: #FFFFC0;
     display: none;
     border-radius: 10px;
     opacity: 0.9;
     padding: 10px 10px 10px 10px;
-    font-size: 9px
+    font-size: 9px;
+    text-align: left
 }
 
 #rawTweets {

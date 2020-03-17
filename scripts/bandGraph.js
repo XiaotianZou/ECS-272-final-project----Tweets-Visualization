@@ -165,7 +165,7 @@ function onChangeBandGraph() {
                 .attr('y2', bandGraphInnerHeight)
                 .attr('stroke', 'red')
                 .attr('stroke-width', 2)
-            overviewSVG.append('line')
+            overviewSVGLayer1.append('line')
                 .attr('class', 'streamSelection')
                 .attr('x1', xScaleOverview(data[j]['earlyTime']))
                 .attr('x2', xScaleOverview(data[j]['earlyTime']))
@@ -358,8 +358,8 @@ function drawBandGraph() {
         root['name'] = 'Categories'
         var children = []
         var sum = arraySum(data[hoveredEmotionBubbleIndex]['category'])
-        for(var i = 0; i < data[hoveredEmotionBubbleIndex]['category'].length; i++) {
-            if(data[hoveredEmotionBubbleIndex]['category'][i] == 0) continue
+        for (var i = 0; i < data[hoveredEmotionBubbleIndex]['category'].length; i++) {
+            if (data[hoveredEmotionBubbleIndex]['category'][i] == 0) continue
             var o = {}
             o['name'] = emotionCategories[i]
             o['size'] = data[hoveredEmotionBubbleIndex]['category'][i] / sum
@@ -371,10 +371,10 @@ function drawBandGraph() {
             .size([emotionBubbleRadius2 * 2, emotionBubbleRadius2 * 2])
             .padding(1)
         root = d3.hierarchy(root)
-            .sum(function(d) {
+            .sum(function (d) {
                 return d.size
             })
-            .sort(function(a, b) {
+            .sort(function (a, b) {
                 return b.value - a.value
             })
         var nodes = pack(root).descendants()
@@ -383,42 +383,38 @@ function drawBandGraph() {
             .data(nodes)
             .enter()
             .append('circle')
-            .attr('transform', function(d) {
+            .attr('transform', function (d) {
                 return 'translate(' + (d.x - root.x) * k + ', ' + (d.y - root.y) * k + ')'
             })
-            .attr('r', function(d) {
+            .attr('r', function (d) {
                 return d.r * k
             })
-            // .style('display', function(d) {
-            //     if(d.parent == null) return 'none'
-            //     else return 'block'
-            // })
-            .style('fill', function(d) {
-                if(d.parent == null) return 'white'
+            .style('fill', function (d) {
+                if (d.parent == null) return 'white'
                 return emotionColors[emotionCategories.indexOf(d['data']['name'])]
             })
             .attr('stroke', 'black')
-            .style('opacity', function(d) {
-                if(d.parent == null) return 0.4
+            .style('opacity', function (d) {
+                if (d.parent == null) return 0.4
                 else return 1
             })
         emotionBubbleHoveringLayer.selectAll('line')
             .data(nodes.slice(1, nodes.length))
             .enter()
             .append('line')
-            .attr('transform', function(d) {
+            .attr('transform', function (d) {
                 return 'translate(' + (d.x - root.x) * k + ', ' + (d.y - root.y) * k + ')'
             })
-            .attr('x1', function(d) {
+            .attr('x1', function (d) {
                 return -(d.r * k) * Math.cos(dominanceScaleBandGraph(d['data']['dominance']))
             })
-            .attr('y1', function(d) {
+            .attr('y1', function (d) {
                 return (d.r * k) * Math.sin(dominanceScaleBandGraph(d['data']['dominance']))
             })
-            .attr('x2', function(d) {
+            .attr('x2', function (d) {
                 return (d.r * k) * Math.cos(dominanceScaleBandGraph(d['data']['dominance']))
             })
-            .attr('y2', function(d) {
+            .attr('y2', function (d) {
                 return -(d.r * k) * Math.sin(dominanceScaleBandGraph(d['data']['dominance']))
             })
             .attr('stroke', 'white')
@@ -449,7 +445,7 @@ function drawBandGraph() {
                     .attr('y2', bandGraphInnerHeight)
                     .attr('stroke', 'red')
                     .attr('stroke-width', 2)
-                overviewSVG.append('line')
+                overviewSVGLayer1.append('line')
                     .attr('class', 'streamSelection')
                     .attr('x1', xScaleOverview(data[selectedClusterIndex]['earlyTime']))
                     .attr('x2', xScaleOverview(data[selectedClusterIndex]['earlyTime']))
@@ -464,6 +460,14 @@ function drawBandGraph() {
                 onChangeRawTweets()
                 onChangeScatterPlot()
             })
+        bandGraphSVGLayer1.append('line')
+            .attr('class', 'emotionBubbleHovering')
+            .attr('x1', xScaleBandGraph(data[hoveredEmotionBubbleIndex]['earlyTime']))
+            .attr('x2', xScaleBandGraph(data[hoveredEmotionBubbleIndex]['earlyTime']))
+            .attr('y1', 0)
+            .attr('y2', bandGraphInnerHeight)
+            .attr('stroke', 'red')
+            .attr('stroke-width', 1)
     }
 
     for (var i = 0; i < emotionCategoryByCluster.length; i++) {
