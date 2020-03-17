@@ -83,7 +83,7 @@ function onChangeScatterPlot() {
             }
 
             var triggerInfo = data[selectedClusterIndex]['trigger'][i]
-            var html = "<i>" + triggerInfo[0] + '</i><br/><b>Valence :</b>' + triggerInfo[1].toFixed(2) + '<br/><b>Arousal: </b>' + triggerInfo[2].toFixed(2) + '<br/><b>Dominance :</b>' + triggerInfo[3].toFixed(2) + '<br/><b>Emotion: </b>'
+            var html = "<i>" + triggerInfo[0] + '</i><br/><b>Valence: </b>' + triggerInfo[1].toFixed(2) + '<br/><b>Arousal: </b>' + triggerInfo[2].toFixed(2) + '<br/><b>Dominance: </b>' + triggerInfo[3].toFixed(2) + '<br/><b>Emotion: </b>'
             for (var j = 0; j < triggerInfo[4].length; j++) {
                 if (triggerInfo[4][j] != 0) {
                     html = html + '<span style = \'color: ' + emotionColors[j] + '\'>' + emotionCategories[j] + '</span> '
